@@ -4,14 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sachin's Portfolio</title>
-    <link rel="icon" type="image/x-icon" href="logo.ico">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
 
     <style>
         :root {
             --primary: #2c3e50;
-            --secondary:rgb(248, 198, 0); /* Solid yellow instead of blue */
+            --secondary:#f8c600; /* Solid yellow instead of blue */
             --accent: #ff9900; /* Complementary orange accent */
             --accent-light: #ffdd99;
             --background: #f9f9f9;
@@ -469,6 +468,12 @@
             gap: 1rem;
         }
 
+        .research-links {
+            margin-top: 1.5rem;
+            display: flex;
+            gap: 1rem;
+        }
+
         .project-link {
             color: var(--primary);
             text-decoration: none;
@@ -480,7 +485,23 @@
             font-weight: 500;
         }
 
+        .research-link {
+            color: var(--primary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            background-color: var(--secondary);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+
         .project-link:hover {
+            background-color: var(--accent);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px var(--shadow);
+        }
+        .research-link:hover {
             background-color: var(--accent);
             transform: translateY(-2px);
             box-shadow: 0 4px 8px var(--shadow);
@@ -912,7 +933,7 @@
                 <img src="avtar.gif" alt="Sachin Soni" class="profile-photo">
                 <div class="profile-info">
                     <h1 class="header-title">Sachin Soni</h1>
-                    <div class="header-subtitle">Computer Science Researcher & AI/ML Developer</div>
+                    <div class="header-subtitle">Computer Science Researcher & AI/ML Engineer</div>
                 </div>
             </div>
             <div class="author-info">
@@ -1045,26 +1066,34 @@
                             <span class="project-tag">Python</span>
                             <span class="project-tag">OpenCV</span>
                             <span class="project-tag">Matplotlib</span>
+                            <span class="project-tag">SpeechRecognition</span>
+                            <span class="project-tag">PyAudio</span>
+                            <span class="project-tag">Pyttsx3</span>
+                            <span class="project-tag">Google Gemini</span>
                         </div>
                         <div class="project-links">
                             <a href="https://github.com/sachinsonii/AI_Voice_Assistant" class="project-link"><i class="fab fa-github"></i> Code</a>
-                            <a href="https://github.com/sachinsonii/AI_Voice_Assistant/blob/main/README.md" class="project-link">Doc.</a>
+                            <a href="https://github.com/sachinsonii/AI_Voice_Assistant/blob/main/README.md" class="project-link"><i class="fas fa-book-open"></i> Doc.</a>
                         </div>
                     </div>
                 </div>
                 <div class="project-card">
-                    <img src="P2.jpg" alt="Project" class="project-image">
+                    <img src="P6.jpg" alt="Project" class="project-image">
                     <div class="project-content">
-                        <h3 class="project-title">Neural Ninja</h3>
-                        <p>Neural Ninja is an AI-powered side-scrolling game where a ninja learns to jump over obstacles using a genetic algorithm. Over multiple generations, the AI evolves to improve its survival skills.</p>
+                        <h3 class="project-title">Image Dehazer</h3>
+                        <p>This project implements an custom image dehazing model using deep learning techniques and transmission map to enhance the visibility of hazy images well its the 1st version and later improvements will be done.</p>
                         <div class="project-tags">
                             <span class="project-tag">Python</span>
                             <span class="project-tag">Numpy</span>
-                            <span class="project-tag">Pygame</span>
+                            <span class="project-tag">OpenCV</span>
+                            <span class="project-tag">Keras</span>
+                            <span class="project-tag">Pandas</span>
+                            <span class="project-tag">TensorFlow</span>
+                            <span class="project-tag">Matplotlib</span>
                         </div>
                         <div class="project-links">
-                            <a href="https://github.com/sachinsonii/Neural_Ninja.git" class="project-link"><i class="fab fa-github"></i> Code</a>
-                            <a href="https://github.com/sachinsonii/Neural_Ninja/blob/main/README.md" class="project-link">Doc.</a>
+                            <a href="https://github.com/sachinsonii/Image_Dehazing" class="project-link"><i class="fab fa-github"></i> Code</a>
+                            <a href="https://github.com/sachinsonii/Image_Dehazing/blob/main/README.md" class="project-link"><i class="fas fa-book-open"></i> Doc.</a>
                         </div>
                     </div>
                 </div>
@@ -1084,7 +1113,7 @@
                         </div>
                         <div class="project-links">
                             <a href="https://github.com/sachinsonii/Energy_Consumption_Forecast_Ensemble.git" class="project-link"><i class="fab fa-github"></i> Code</a>
-                            <a href="https://github.com/sachinsonii/Energy_Consumption_Forecast_Ensemble/blob/main/README.md" class="project-link">Doc.</a>
+                            <a href="https://github.com/sachinsonii/Energy_Consumption_Forecast_Ensemble/blob/main/README.md" class="project-link"><i class="fas fa-book-open"></i> Doc.</a>
                         </div>
                     </div>
                 </div>
@@ -1092,7 +1121,7 @@
                     <img src="P4.avif   " alt="Project" class="project-image">
                     <div class="project-content">
                         <h3 class="project-title">DCC-AV Simulation</h3>
-                        <p>This project implements a simulation of autonomous vehicles using decentralized consensus and control strategies. The simulation is based on concepts presented in my conference paper at WPMC 24 IEEE at Sharda University.</p>
+                        <p>This project implements a simulation of autonomous vehicles using decentralized consensus and control strategies. The simulation is based on concepts presented in my research.</p>
                         <div class="project-tags">
                             <span class="project-tag">Python</span>
                             <span class="project-tag">Pygame</span>
@@ -1102,7 +1131,43 @@
                         </div>
                         <div class="project-links">
                             <a href="https://github.com/sachinsonii/DCC-AV_Simulation.git" class="project-link"><i class="fab fa-github"></i> Code</a>
-                            <a href="https://github.com/sachinsonii/DCC-AV_Simulation/blob/main/README.md" class="project-link">Doc.</a>
+                            <a href="https://github.com/sachinsonii/DCC-AV_Simulation/blob/main/README.md" class="project-link"><i class="fas fa-book-open"></i> Doc.</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <img src="P2.jpg" alt="Project" class="project-image">
+                    <div class="project-content">
+                        <h3 class="project-title">Neural Ninja</h3>
+                        <p>Neural Ninja is an AI-powered side-scrolling game where a ninja learns to jump over obstacles using a genetic algorithm. Over multiple generations, the AI evolves to improve its survival.</p>
+                        <div class="project-tags">
+                            <span class="project-tag">Python</span>
+                            <span class="project-tag">Numpy</span>
+                            <span class="project-tag">Pygame</span>
+                        </div>
+                        <div class="project-links">
+                            <a href="https://github.com/sachinsonii/Neural_Ninja.git" class="project-link"><i class="fab fa-github"></i> Code</a>
+                            <a href="https://github.com/sachinsonii/Neural_Ninja/blob/main/README.md" class="project-link"><i class="fas fa-book-open"></i> Doc.</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <img src="P7.jpg" alt="Project" class="project-image">
+                    <div class="project-content">
+                        <h3 class="project-title">SER Model</h3>
+                        <p>This project implements a Speech Emotion Recognition (SER) model using deep learning techniques and librosa to classify and predicting emotions from speech audio data.</p>
+                        <div class="project-tags">
+                            <span class="project-tag">Python</span>
+                            <span class="project-tag">Numpy</span>
+                            <span class="project-tag">Librosa</span>
+                            <span class="project-tag">Keras</span>
+                            <span class="project-tag">Pandas</span>
+                            <span class="project-tag">TensorFlow</span>
+                            <span class="project-tag">Matplotlib</span>
+                        </div>
+                        <div class="project-links">
+                            <a href="https://github.com/sachinsonii/Speech_Emotion_Recognition" class="project-link"><i class="fab fa-github"></i> Code</a>
+                            <a href="https://github.com/sachinsonii/Speech_Emotion_Recognition/blob/main/README.md" class="project-link"><i class="fas fa-book-open"></i> Doc.</a>
                         </div>
                     </div>
                 </div>
@@ -1120,8 +1185,8 @@
                         </div>
                         <div class="project-links">
                             <a href="https://github.com/sachinsonii/Whisper-Link.git" class="project-link"><i class="fab fa-github"></i> Code</a>
-                            <a href="https://sachinsonii.github.io/Whisper-Link/" class="project-link"> Demo</a>
-                            <a href="https://github.com/sachinsonii/Whisper-Link/blob/main/README.md" class="project-link">Doc.</a>
+                            <a href="https://sachinsonii.github.io/Whisper-Link/" class="project-link"><i class="fas fa-play"></i> Demo</a>
+                            <a href="https://github.com/sachinsonii/Whisper-Link/blob/main/README.md" class="project-link"><i class="fas fa-book-open"></i> Doc.</a>
                         </div>
                     </div>
                 </div>
@@ -1140,11 +1205,14 @@
             </div>
             <div class="research-paper">
                 <h3 class="paper-title">Exploring Reinforcement Learning: Theory, Applications and Advances</h3>
-                <div class="paper-authors">Sachin Soni, Dr. Manzoor Ansari</div>
+                <div class="paper-authors">Sachin Soni</div>
                 <div class="paper-journal">Presented at DONBOSCODELHI-24 1st International Conference (YETSA): opportunities and challenges for Viksit Bharat, 2024</div>
                 <div class="paper-abstract">
                     <p>Reinforcement Learning (RL) has emerged as a transformative paradigm within machine learning, offering robust solutions for complex decision-making tasks across various domains. This review paper explores the...</p>
                 </div>
+                <div class="research-links">
+                            <a href="https://www.techrxiv.org/users/926228/articles/1297792-exploring-reinforcement-learning-theory-applications-and-advances" class="research-link"><i class="fas fa-book"></i> Paper</a>
+                        </div>
             </div>
         </section>
 
@@ -1235,7 +1303,7 @@
 
         // CV Download
         document.getElementById('cv-download').addEventListener('click', () => {
-            const driveLink = "https://drive.google.com/file/d/1AZvr4DOnY-8p1s_i6aiP_dvsh5yopkQE/view?usp=drive_link";
+            const driveLink = "https://drive.google.com/file/d/1oW_XIdhAmHCNkHOnOU_kinLNQLPjfKg_/view?usp=sharing";
     
     // Open the link in a new tab
     window.open(driveLink, '_blank');
