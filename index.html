@@ -1,1415 +1,404 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NeuralOS v20.04</title>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700&display=swap');
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'JetBrains Mono', monospace;
-            background: #000;
-            color: #00ff41;
-            overflow: hidden;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .matrix-bg {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            opacity: 0.05;
-        }
-        
-        .header {
-            background: rgba(0, 20, 0, 0.9);
-            padding: 8px 20px;
-            border-bottom: 1px solid #00ff41;
-            font-size: 14px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .tts-controls {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .tts-button {
-            background: rgba(0, 255, 65, 0.1);
-            border: 1px solid #00ff41;
-            color: #00ff41;
-            padding: 4px 8px;
-            font-size: 12px;
-            font-family: inherit;
-            cursor: pointer;
-            border-radius: 2px;
-            transition: all 0.3s ease;
-        }
-        
-        .tts-button:hover {
-            background: rgba(0, 255, 65, 0.2);
-            box-shadow: 0 0 5px #00ff41;
-        }
-        
-        .tts-button.active {
-            background: #00ff41;
-            color: #000;
-        }
-        
-        .volume-control {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            font-size: 12px;
-        }
-        
-        .volume-slider {
-            width: 60px;
-            height: 4px;
-            background: rgba(0, 255, 65, 0.2);
-            outline: none;
-            -webkit-appearance: none;
-            border-radius: 2px;
-        }
-        
-        .volume-slider::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            width: 12px;
-            height: 12px;
-            background: #00ff41;
-            cursor: pointer;
-            border-radius: 50%;
-            box-shadow: 0 0 3px #00ff41;
-        }
-        
-        .speaking-indicator {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: #ff4444;
-            margin-left: 10px;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-        
-        .speaking-indicator.active {
-            opacity: 1;
-            animation: pulse 1s infinite;
-        }
-        
-        .main-container {
-            display: flex;
-            flex: 1;
-            height: calc(100vh - 80px);
-        }
-        
-        .terminal {
-            width: 70%;
-            padding: 20px;
-            overflow-y: auto;
-            font-size: 16px;
-            line-height: 1.6;
-        }
-        
-        .side-panel {
-            width: 30%;
-            background: rgba(0, 10, 0, 0.8);
-            border-left: 1px solid #00ff41;
-            padding: 20px;
-            overflow-y: auto;
-        }
-        
-        .side-panel h3 {
-            color: #00aaff;
-            margin-bottom: 15px;
-            font-size: 14px;
-            border-bottom: 1px solid #003300;
-            padding-bottom: 5px;
-        }
-        
-        .neural-activity {
-            margin-bottom: 25px;
-        }
-        
-        .activity-line {
-            display: flex;
-            justify-content: space-between;
-            font-size: 11px;
-            margin-bottom: 3px;
-            opacity: 0.8;
-        }
-        
-        .progress-bar {
-            width: 100%;
-            height: 4px;
-            background: rgba(0, 255, 65, 0.1);
-            margin: 5px 0;
-            border-radius: 2px;
-            overflow: hidden;
-        }
-        
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #00ff41, #00aaff);
-            transition: width 0.3s ease;
-            animation: pulse 2s infinite;
-        }
-        
-        @keyframes pulse {
-            0%, 100% { opacity: 0.8; }
-            50% { opacity: 1; }
-        }
-        
-        .system-log {
-            margin-bottom: 25px;
-        }
-        
-        .log-entry {
-            font-size: 10px;
-            margin-bottom: 4px;
-            opacity: 0.7;
-            color: #00ff41;
-            animation: fadeIn 0.5s ease;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 0.7; }
-        }
-        
-        .network-nodes {
-            margin-bottom: 25px;
-        }
-        
-        .neural-network-canvas {
-            width: 100%;
-            height: 80px;
-            position: relative;
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 3px;
-            overflow: hidden;
-        }
-        
-        .neuron {
-            position: absolute;
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            animation: neuronPulse 2s infinite ease-in-out;
-        }
-        
-        .neuron.input { background: #00aaff; box-shadow: 0 0 3px #00aaff; }
-        .neuron.hidden { background: #00ff41; box-shadow: 0 0 3px #00ff41; }
-        .neuron.output { background: #ffaa00; box-shadow: 0 0 3px #ffaa00; }
-        
-        .connection {
-            position: absolute;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(0, 255, 65, 0.4), transparent);
-            animation: dataFlow 3s infinite linear;
-        }
-        
-        @keyframes neuronPulse {
-            0%, 100% { opacity: 0.6; transform: scale(1); }
-            50% { opacity: 1; transform: scale(1.4); }
-        }
-        
-        @keyframes dataFlow {
-            0% { opacity: 0.2; }
-            50% { opacity: 0.6; }
-            100% { opacity: 0.2; }
-        }
-        
-        .quick-stats {
-            font-size: 11px;
-        }
-        
-        .stat-item {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 8px;
-            padding: 3px 0;
-        }
-        
-        .stat-value {
-            color: #00aaff;
-            font-weight: bold;
-        }
-        
-        .status-bar {
-            background: rgba(0, 20, 0, 0.9);
-            padding: 8px 20px;
-            border-top: 1px solid #00ff41;
-            font-size: 12px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .input-line {
-            display: flex;
-            align-items: center;
-            margin-top: 10px;
-        }
-        
-        .prompt {
-            color: #00ff41;
-            margin-right: 10px;
-        }
-        
-        #user-input {
-            background: transparent;
-            border: none;
-            color: #00ff41;
-            font-family: inherit;
-            font-size: inherit;
-            outline: none;
-            flex: 1;
-        }
-        
-        .cursor {
-            animation: blink 1s infinite;
-        }
-        
-        @keyframes blink {
-            0%, 50% { opacity: 1; }
-            51%, 100% { opacity: 0; }
-        }
-        
-        .ai-message {
-            color: #00aaff;
-            margin: 10px 0;
-        }
-        
-        .system-message {
-            color: #ffaa00;
-            margin: 5px 0;
-        }
-        
-        .error-message {
-            color: #ff4444;
-        }
-        
-        .ascii-art {
-            color: #00ff41;
-            font-size: 12px;
-            line-height: 1.2;
-            margin: 20px 0;
-            white-space: pre;
-        }
-        
-        .project-box {
-            border: 1px solid #00ff41;
-            padding: 15px;
-            margin: 10px 0;
-            background: rgba(0, 255, 65, 0.05);
-        }
-        
-        .link, a {
-            color: #00aaff;
-            text-decoration: underline;
-            cursor: pointer;
-        }
-        
-        .link:hover, a:hover {
-            color: #00ff41;
-            text-decoration: none;
-        }
-        
-        .hidden {
-            display: none;
-        }
-        
-        .typing {
-            border-right: 2px solid #00ff41;
-            animation: typing 0.5s steps(1) infinite;
-        }
-        
-        @keyframes typing {
-            0% { border-color: #00ff41; }
-            50% { border-color: transparent; }
-        }
-        
-        .neural-particle {
-            position: absolute;
-            width: 2px;
-            height: 2px;
-            background: #00ff41;
-            border-radius: 50%;
-            opacity: 0.3;
-            animation: float 6s infinite linear;
-        }
-        
-        @keyframes float {
-            0% { transform: translateY(100vh) translateX(0); opacity: 0; }
-            10% { opacity: 0.3; }
-            90% { opacity: 0.3; }
-            100% { transform: translateY(-10px) translateX(20px); opacity: 0; }
-        }
-        
-        .tts-status {
-            font-size: 10px;
-            color: #00ff41;
-            opacity: 0.7;
-        }
-    </style>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Sachin Soni — AI/ML Researcher & Developer</title>
+<link rel="icon" href="logo.png" type="image/png">
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:wght@300;400;500&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="styles.css"/>
 </head>
 <body>
-    <div class="matrix-bg" id="matrix-bg"></div>
-    
-    <div class="header">
-        <div>NeuralOS v20.04 | User: Guest | Access: Granted</div>
-        <div class="tts-controls">
-            <button class="tts-button" id="tts-toggle">TTS: ON</button>
-            <div class="volume-control">
-                <span>Vol:</span>
-                <input type="range" class="volume-slider" id="volume-slider" min="0" max="1" step="0.1" value="0.7">
-            </div>
-            <div class="speaking-indicator" id="speaking-indicator"></div>
-            <div id="current-time"></div>
-        </div>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">Sachin Soni</a>
+
+  <button class="hamburger" id="hamburgerBtn" aria-label="Menu">
+    <svg viewBox="0 0 24 24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </button>
+
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#research">Research</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#contact">Contact</a></li>
+    <li>
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+        <!-- Moon icon (shown in dark mode) -->
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--text-muted)">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+        </svg>
+        <!-- Sun icon (shown in light mode) -->
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--text-muted)">
+          <circle cx="12" cy="12" r="5"/>
+          <line x1="12" y1="1" x2="12" y2="3"/>
+          <line x1="12" y1="21" x2="12" y2="23"/>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+          <line x1="1" y1="12" x2="3" y2="12"/>
+          <line x1="21" y1="12" x2="23" y2="12"/>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+        </svg>
+      </button>
+    </li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-left">
+    <div class="hero-tag fade-up delay-1">CS Researcher & AI/ML Developer</div>
+    <h1 class="hero-name fade-up delay-2">Sachin<br/><span>Soni</span></h1>
+    <p class="hero-title fade-up delay-3">M.Tech @ BITS Pilani · AI/ML Researcher · Engineer</p>
+    <p class="hero-bio fade-up delay-4">
+      I build at the edge of intelligence — from autonomous drone systems and computer vision pipelines to published research in decentralized vehicle control and genomic deep learning. Currently pursuing M.Tech at BITS Pilani while working as a Test Engineer at Wipro and founding Karma Sarthi, a career mentorship platform. Four research papers. Real-world deployments. Always building.
+    </p>
+    <div class="hero-actions fade-up delay-5">
+      <a href="#projects" class="btn-primary">Projects</a>
+      <a href="https://github.com/sachinsonii" target="_blank" class="btn-ghost">GitHub ↗</a>
     </div>
-    
-    <div class="main-container">
-        <div class="terminal" id="terminal">
-            <!-- Content will be populated by JavaScript -->
-        </div>
-        
-        <div class="side-panel">
-            <div class="neural-activity">
-                <h3>NEURAL ACTIVITY</h3>
-                <div class="activity-line">
-                    <span>Cognitive Load</span>
-                    <span id="cognitive-load">78%</span>
-                </div>
-                <div class="progress-bar">
-                    <div class="progress-fill" id="cognitive-bar" style="width: 78%"></div>
-                </div>
-                
-                <div class="activity-line">
-                    <span>Memory Usage</span>
-                    <span id="memory-usage">64%</span>
-                </div>
-                <div class="progress-bar">
-                    <div class="progress-fill" id="memory-bar" style="width: 64%"></div>
-                </div>
-                
-                <div class="activity-line">
-                    <span>Neural Sync</span>
-                    <span id="neural-sync">92%</span>
-                </div>
-                <div class="progress-bar">
-                    <div class="progress-fill" id="sync-bar" style="width: 92%"></div>
-                </div>
-            </div>
-            
-            <div class="system-log">
-                <h3>SYSTEM LOG</h3>
-                <div id="log-container">
-                    <!-- Dynamic log entries -->
-                </div>
-            </div>
-            
-            <div class="network-nodes">
-                <h3>NEURAL NETWORK</h3>
-                <div class="neural-network-canvas" id="neural-network-canvas">
-                    <!-- Neural network will be dynamically created -->
-                </div>
-            </div>
-            
-            <div class="quick-stats">
-                <h3>QUICK STATS</h3>
-                <div class="stat-item">
-                    <span>Active Processes</span>
-                    <span class="stat-value" id="processes">147</span>
-                </div>
-                <div class="stat-item">
-                    <span>Commands Run</span>
-                    <span class="stat-value" id="commands-count">0</span>
-                </div>
-                <div class="stat-item">
-                    <span>Data Processed</span>
-                    <span class="stat-value" id="data-processed">2.3GB</span>
-                </div>
-                <div class="stat-item">
-                    <span>AI Responses</span>
-                    <span class="stat-value" id="ai-responses">0</span>
-                </div>
-                <div class="stat-item">
-                    <span class="tts-status">TTS Engine</span>
-                    <span class="stat-value tts-status" id="tts-status">Ready</span>
-                </div>
-            </div>
-        </div>
+    <div class="hero-socials fade-up delay-5">
+      <a href="https://linkedin.com/in/sachinsonii" target="_blank" class="social-link">LinkedIn</a>
+      <a href="https://github.com/sachinsonii" target="_blank" class="social-link">GitHub</a>
+      <a href="mailto:sachinsonivbs@gmail.com" class="social-link">Email</a>
     </div>
-    
-    <div class="status-bar">
-        <div>Uptime: <span id="uptime">00:00:00</span> | CPU: <span id="cpu">45%</span> | Memory: <span id="memory">73%</span></div>
-        <div>Neural Pathways: Active | Cognitive Load: Optimal | Voice Synthesis: <span id="voice-status">Online</span></div>
+  </div>
+
+  <div class="hero-right fade-up delay-3">
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+      <div class="stat-block">
+        <div class="stat-num">4</div>
+        <div class="stat-label">Papers Published</div>
+      </div>
+      <div class="stat-block">
+        <div class="stat-num">BITS</div>
+        <div class="stat-label">M.Tech · Pilani</div>
+      </div>
+      <div class="stat-block">
+        <div class="stat-num">14+</div>
+        <div class="stat-label">GitHub Repos</div>
+      </div>
+      <div class="stat-block">
+        <div class="stat-num">3+</div>
+        <div class="stat-label">Years in AI/ML</div>
+      </div>
     </div>
 
-    <script>
-        class TTSEngine {
-            constructor() {
-                this.synth = window.speechSynthesis;
-                this.enabled = true;
-                this.volume = 0.7;
-                this.rate = 0.9;
-                this.pitch = 1.0;
-                this.voice = null;
-                this.currentUtterance = null;
-                this.queue = [];
-                this.speaking = false;
-                
-                this.initVoices();
-                this.setupEventListeners();
-            }
-            
-            initVoices() {
-                // Wait for voices to be loaded
-                const loadVoices = () => {
-                    const voices = this.synth.getVoices();
-                    // Find the best male English voice
-                    this.voice = voices.find(voice => 
-                        voice.lang.startsWith('en') && 
-                        voice.name.toLowerCase().includes('male')
-                    ) || voices.find(voice => 
-                        voice.lang.startsWith('en-US') && 
-                        (voice.name.toLowerCase().includes('david') ||
-                         voice.name.toLowerCase().includes('mark') ||
-                         voice.name.toLowerCase().includes('daniel') ||
-                         voice.name.toLowerCase().includes('james'))
-                    ) || voices.find(voice => 
-                        voice.lang.startsWith('en') && 
-                        !voice.name.toLowerCase().includes('female') &&
-                        !voice.name.toLowerCase().includes('woman')
-                    ) || voices.find(voice => voice.lang.startsWith('en')) || voices[0];
-                    
-                    console.log('Selected voice:', this.voice ? this.voice.name : 'Default');
-                };
-                
-                if (this.synth.getVoices().length === 0) {
-                    this.synth.addEventListener('voiceschanged', loadVoices);
-                } else {
-                    loadVoices();
-                }
-            }
-            
-            setupEventListeners() {
-                document.getElementById('tts-toggle').addEventListener('click', () => {
-                    this.toggleTTS();
-                });
-                
-                document.getElementById('volume-slider').addEventListener('input', (e) => {
-                    this.setVolume(parseFloat(e.target.value));
-                });
-            }
-            
-            toggleTTS() {
-                this.enabled = !this.enabled;
-                const button = document.getElementById('tts-toggle');
-                button.textContent = this.enabled ? 'TTS: ON' : 'TTS: OFF';
-                button.classList.toggle('active', this.enabled);
-                
-                if (!this.enabled && this.speaking) {
-                    this.stop();
-                }
-                
-                document.getElementById('tts-status').textContent = this.enabled ? 'Ready' : 'Disabled';
-                document.getElementById('voice-status').textContent = this.enabled ? 'Online' : 'Offline';
-            }
-            
-            setVolume(volume) {
-                this.volume = Math.max(0, Math.min(1, volume));
-            }
-            
-            speak(text, options = {}) {
-                if (!this.enabled || !text.trim()) return;
-                
-                // Clean text for better TTS
-                const cleanText = this.cleanTextForTTS(text);
-                
-                const utterance = new SpeechSynthesisUtterance(cleanText);
-                utterance.voice = this.voice;
-                utterance.volume = this.volume;
-                utterance.rate = options.rate || this.rate;
-                utterance.pitch = options.pitch || this.pitch;
-                
-                utterance.onstart = () => {
-                    this.speaking = true;
-                    this.currentUtterance = utterance;
-                    document.getElementById('speaking-indicator').classList.add('active');
-                    document.getElementById('tts-status').textContent = 'Speaking';
-                };
-                
-                utterance.onend = () => {
-                    this.speaking = false;
-                    this.currentUtterance = null;
-                    document.getElementById('speaking-indicator').classList.remove('active');
-                    document.getElementById('tts-status').textContent = 'Ready';
-                    
-                    // Process next in queue
-                    if (this.queue.length > 0) {
-                        const next = this.queue.shift();
-                        setTimeout(() => this.speak(next.text, next.options), 100);
-                    }
-                };
-                
-                utterance.onerror = (event) => {
-                    console.error('TTS Error:', event.error);
-                    this.speaking = false;
-                    document.getElementById('speaking-indicator').classList.remove('active');
-                    document.getElementById('tts-status').textContent = 'Error';
-                };
-                
-                // If currently speaking, queue the text
-                if (this.speaking) {
-                    this.queue.push({ text: cleanText, options });
-                } else {
-                    this.synth.speak(utterance);
-                }
-            }
-            
-            cleanTextForTTS(text) {
-                return text
-                    .replace(/\[AI\]:/g, '')
-                    .replace(/\[.*?\]/g, '')
-                    .replace(/\n/g, ' ')
-                    .replace(/\s+/g, ' ')
-                    .replace(/([a-z])([A-Z])/g, '$1 $2')
-                    .replace(/(\d+)%/g, '$1 percent')
-                    .replace(/\$/, 'dollar ')
-                    .replace(/#/g, 'hash ')
-                    .replace(/&/g, ' and ')
-                    .replace(/_/g, ' ')
-                    .trim();
-            }
-            
-            stop() {
-                this.synth.cancel();
-                this.queue = [];
-                this.speaking = false;
-                this.currentUtterance = null;
-                document.getElementById('speaking-indicator').classList.remove('active');
-                document.getElementById('tts-status').textContent = 'Ready';
-            }
-            
-            speakSystem(text) {
-                this.speak(text, { rate: 1.1, pitch: 0.9 });
-            }
-            
-            speakAI(text) {
-                this.speak(text, { rate: 0.9, pitch: 1.0 });
-            }
-        }
+    <div style="padding: 28px 32px; border: 1px solid var(--border); margin-top: 8px;">
+      <div style="font-family: var(--mono); font-size: 10px; color: var(--text-dim); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 16px;">Current Focus</div>
+      <div style="display: flex; flex-direction: column; gap: 10px;">
+        <div style="display: flex; align-items: center; gap: 10px; font-size: 14px; color: var(--text-muted);">
+          <span style="width: 6px; height: 6px; background: var(--accent); display: inline-block; flex-shrink: 0;"></span>
+          Autonomous Vehicle Decision Systems
+        </div>
+        <div style="display: flex; align-items: center; gap: 10px; font-size: 14px; color: var(--text-muted);">
+          <span style="width: 6px; height: 6px; background: var(--accent); display: inline-block; flex-shrink: 0;"></span>
+          Deep Learning for Genome Sequencing
+        </div>
+        <div style="display: flex; align-items: center; gap: 10px; font-size: 14px; color: var(--text-muted);">
+          <span style="width: 6px; height: 6px; background: var(--accent); display: inline-block; flex-shrink: 0;"></span>
+          Advanced Vision Perception Systems
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
-        class NeuralOS {
-            constructor() {
-                this.terminal = document.getElementById('terminal');
-                this.currentPhase = 'boot';
-                this.guidedMode = false;
-                this.commandHistory = [];
-                this.currentDirectory = '/';
-                this.sudoMode = false;
-                this.startTime = Date.now();
-                this.commandCount = 0;
-                this.aiResponseCount = 0;
-                this.logEntries = [
-                    'Neural pathways initialized',
-                    'Cognitive modules loaded',
-                    'Memory banks synchronized',
-                    'System ready for interaction'
-                ];
-                
-                // Initialize TTS Engine
-                this.tts = new TTSEngine();
-                
-                this.projects = {
-                    'ai_voice_assistant.project': {
-                        name: 'AI Voice Assistant',
-                        description: 'AI-powered voice assistant integrating speech recognition, TTS, computer vision, and Google Gemini AI',
-                        stack: 'Python, OpenCV, SpeechRecognition, PyAudio, Pyttsx3, Google Gemini',
-                        features: ['Interactive voice interface', 'Memory and learning capabilities', 'Computer vision integration'],
-                        links: ['<a href="https://github.com/sachinsonii/AI_Voice_Assistant" target="_blank">[Code]</a>', '<a href="https://github.com/sachinsonii/AI_Voice_Assistant/blob/main/README.md" target="_blank">[Doc]</a>']
-                    },
-                    'image_dehazer.project': {
-                        name: 'Image Dehazer',
-                        description: 'Custom image dehazing model using deep learning and transmission map to enhance visibility of hazy images',
-                        stack: 'Python, TensorFlow, Keras, OpenCV, NumPy, Matplotlib',
-                        features: ['Deep learning dehazing', 'Transmission map processing', 'Version 1 with planned improvements'],
-                        links: ['<a href="https://github.com/sachinsonii/Image_Dehazing" target="_blank">[Code]</a>', '<a href="https://github.com/sachinsonii/Image_Dehazing/blob/main/README.md" target="_blank">[Doc]</a>']
-                    },
-                    'ece_forecasting_model.project': {
-                        name: 'ECE Forecasting Model',
-                        description: 'Hybrid model combining XGBoost and LSTM to predict energy consumption from household power data',
-                        stack: 'Python, XGBoost, LSTM, Scikit-Learn, Keras, Pandas',
-                        features: ['Feature extraction with XGBoost', 'LSTM temporal modeling', 'Energy consumption prediction'],
-                        links: ['<a href="https://github.com/sachinsonii/Energy_Consumption_Forecast_Ensemble" target="_blank">[Code]</a>', '<a href="https://github.com/sachinsonii/Energy_Consumption_Forecast_Ensemble/blob/main/README.md" target="_blank">[Doc]</a>']
-                    },
-                    'dcc_av_simulation.project': {
-                        name: 'DCC-AV Simulation',
-                        description: 'Simulation of autonomous vehicles using decentralized consensus and control strategies',
-                        stack: 'Python, Pygame, NumPy, Pandas, Matplotlib',
-                        features: ['Decentralized control algorithms', 'Multi-agent simulation', 'Research-based implementation'],
-                        links: ['<a href="https://github.com/sachinsonii/DCC-AV_Simulation" target="_blank">[Code]</a>', '<a href="https://github.com/sachinsonii/DCC-AV_Simulation/blob/main/README.md" target="_blank">[Doc]</a>']
-                    },
-                    'neural_ninja.project': {
-                        name: 'Neural Ninja',
-                        description: 'AI-powered side-scrolling game where ninja learns obstacle jumping using genetic algorithms',
-                        stack: 'Python, NumPy, Pygame',
-                        features: ['Genetic algorithm learning', 'Multi-generational evolution', 'Real-time AI adaptation'],
-                        links: ['<a href="https://github.com/sachinsonii/Neural_Ninja" target="_blank">[Code]</a>', '<a href="https://github.com/sachinsonii/Neural_Ninja/blob/main/README.md" target="_blank">[Doc]</a>']
-                    },
-                    'ser_model.project': {
-                        name: 'SER Model',
-                        description: 'Speech Emotion Recognition model using deep learning and librosa for emotion classification',
-                        stack: 'Python, TensorFlow, Keras, Librosa, NumPy, Pandas',
-                        features: ['Audio emotion classification', 'Deep learning architecture', 'Librosa feature extraction'],
-                        links: ['<a href="https://github.com/sachinsonii/Speech_Emotion_Recognition" target="_blank">[Code]</a>', '<a href="https://github.com/sachinsonii/Speech_Emotion_Recognition/blob/main/README.md" target="_blank">[Doc]</a>']
-                    },
-                    'whisper_link.project': {
-                        name: 'Whisper-Link',
-                        description: 'Peer-to-peer chat application with public/private rooms using WebRTC technology',
-                        stack: 'HTML, CSS, JavaScript, WebRTC, PeerJS',
-                        features: ['P2P real-time messaging', 'No central server required', 'Public and private rooms'],
-                        links: ['<a href="https://github.com/sachinsonii/Whisper-Link" target="_blank">[Code]</a>', '<a href="https://sachinsonii.github.io/Whisper-Link/" target="_blank">[Demo]</a>', '<a href="https://github.com/sachinsonii/Whisper-Link/blob/main/README.md" target="_blank">[Doc]</a>']
-                    }
-                };
-                
-                this.research = {
-                    'dcc_av_paper.pdf': {
-                        title: 'Decentralized Consensus and Control for Autonomous Vehicles',
-                        abstract: 'While autonomous vehicles reshape the face of transportation, the focus is still on real-time decision-making considering rapidly changing traffic scenarios. This work describes a new approach using decentralized consensus algorithms for multi-agent coordination in autonomous vehicle systems.',
-                        status: 'Presented at WPMC 24 IEEE at Sharda University, 2024'
-                    },
-                    'reinforcement_learning_review.pdf': {
-                        title: 'Exploring Reinforcement Learning: Theory, Applications and Advances',
-                        abstract: 'Reinforcement Learning (RL) has emerged as a transformative paradigm within machine learning, offering robust solutions for complex decision-making tasks across various domains. This review paper explores the theoretical foundations, practical applications, and recent advances in RL.',
-                        status: 'Presented at DONBOSCODELHI-24 1st International Conference (YETSA), 2024'
-                    }
-                };
-                
-                this.labProjects = {
-                    'experience.log': 'Researcher & Developer - Freelancer (2023-Present): Model development and research consulting',
-                    'cv_internship.log': 'Computer Vision Intern - Enord Pvt. Ltd. (2023): Industrial automation CV models',
-                    'conference_presentations.log': 'WPMC 24 IEEE & DONBOSCODELHI-24 Conference presentations'
-                };
-                
-                this.init();
-            }
-            
-            init() {
-                this.createMatrixEffect();
-                this.startStatusUpdates();
-                this.createNeuralNodes();
-                this.initializeLogs();
-                this.bootSequence();
-            }
-            
-            createMatrixEffect() {
-                const matrixBg = document.getElementById('matrix-bg');
-                for (let i = 0; i < 50; i++) {
-                    const particle = document.createElement('div');
-                    particle.className = 'neural-particle';
-                    particle.style.left = Math.random() * 100 + '%';
-                    particle.style.animationDelay = Math.random() * 6 + 's';
-                    particle.style.animationDuration = (6 + Math.random() * 4) + 's';
-                    matrixBg.appendChild(particle);
-                }
-            }
-            
-            startStatusUpdates() {
-                setInterval(() => {
-                    const now = new Date();
-                    document.getElementById('current-time').textContent = now.toLocaleTimeString();
-                    
-                    const uptime = Math.floor((Date.now() - this.startTime) / 1000);
-                    const hours = Math.floor(uptime / 3600).toString().padStart(2, '0');
-                    const minutes = Math.floor((uptime % 3600) / 60).toString().padStart(2, '0');
-                    const seconds = (uptime % 60).toString().padStart(2, '0');
-                    document.getElementById('uptime').textContent = `${hours}:${minutes}:${seconds}`;
-                    
-                    document.getElementById('cpu').textContent = (40 + Math.random() * 20).toFixed(0) + '%';
-                    document.getElementById('memory').textContent = (70 + Math.random() * 15).toFixed(0) + '%';
-                    
-                    // Update side panel stats
-                    this.updateSidePanel();
-                }, 1000);
-            }
-            
-            updateSidePanel() {
-                // Update neural activity bars
-                const cognitiveLoad = (75 + Math.random() * 15).toFixed(0);
-                const memoryUsage = (60 + Math.random() * 25).toFixed(0);
-                const neuralSync = (88 + Math.random() * 12).toFixed(0);
-                
-                document.getElementById('cognitive-load').textContent = cognitiveLoad + '%';
-                document.getElementById('cognitive-bar').style.width = cognitiveLoad + '%';
-                
-                document.getElementById('memory-usage').textContent = memoryUsage + '%';
-                document.getElementById('memory-bar').style.width = memoryUsage + '%';
-                
-                document.getElementById('neural-sync').textContent = neuralSync + '%';
-                document.getElementById('sync-bar').style.width = neuralSync + '%';
-                
-                // Update stats
-                document.getElementById('processes').textContent = (140 + Math.floor(Math.random() * 20));
-                document.getElementById('commands-count').textContent = this.commandCount;
-                document.getElementById('ai-responses').textContent = this.aiResponseCount;
-                
-                const dataProcessed = (2.1 + Math.random() * 0.8).toFixed(1);
-                document.getElementById('data-processed').textContent = dataProcessed + 'GB';
-            }
-            
-            createNeuralNodes() {
-                this.createNeuralNetwork();
-            }
-            
-            createNeuralNetwork() {
-                const canvas = document.getElementById('neural-network-canvas');
-                canvas.innerHTML = '';
-                
-                // Compact network: 3 inputs, 4 hidden, 2 outputs for the small space
-                const layers = [
-                    { neurons: 3, type: 'input', x: 15 },
-                    { neurons: 4, type: 'hidden', x: 50 },
-                    { neurons: 2, type: 'output', x: 85 }
-                ];
-                
-                const allNeurons = [];
-                
-                // Create neurons
-                layers.forEach((layer, layerIndex) => {
-                    const layerNeurons = [];
-                    for (let i = 0; i < layer.neurons; i++) {
-                        const neuron = document.createElement('div');
-                        neuron.className = `neuron ${layer.type}`;
-                        
-                        const y = (80 / (layer.neurons + 1)) * (i + 1);
-                        neuron.style.left = layer.x + '%';
-                        neuron.style.top = y + '%';
-                        neuron.style.animationDelay = Math.random() * 2 + 's';
-                        
-                        canvas.appendChild(neuron);
-                        layerNeurons.push({ element: neuron, x: layer.x, y: y });
-                    }
-                    allNeurons.push(layerNeurons);
-                });
-                
-                // Create connections
-                for (let layerIndex = 0; layerIndex < layers.length - 1; layerIndex++) {
-                    const currentLayer = allNeurons[layerIndex];
-                    const nextLayer = allNeurons[layerIndex + 1];
-                    
-                    currentLayer.forEach(currentNeuron => {
-                        nextLayer.forEach(nextNeuron => {
-                            const connection = document.createElement('div');
-                            connection.className = 'connection';
-                            
-                            const deltaX = nextNeuron.x - currentNeuron.x;
-                            const deltaY = nextNeuron.y - currentNeuron.y;
-                            const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
-                            const angle = Math.atan2(deltaY, deltaX) * 180 / Math.PI;
-                            
-                            connection.style.cssText = `
-                                left: ${currentNeuron.x}%;
-                                top: ${currentNeuron.y}%;
-                                width: ${distance}%;
-                                transform: rotate(${angle}deg);
-                                transform-origin: 0 0;
-                                animation-delay: ${Math.random() * 3}s;
-                                opacity: ${0.3 + Math.random() * 0.3};
-                            `;
-                            
-                            canvas.appendChild(connection);
-                        });
-                    });
-                }
-            }
-            
-            initializeLogs() {
-                const logContainer = document.getElementById('log-container');
-                this.logEntries.forEach(entry => {
-                    this.addLogEntry(entry);
-                });
-            }
-            
-            addLogEntry(message) {
-                const logContainer = document.getElementById('log-container');
-                const logEntry = document.createElement('div');
-                logEntry.className = 'log-entry';
-                
-                const timestamp = new Date().toLocaleTimeString();
-                logEntry.textContent = `[${timestamp}] ${message}`;
-                
-                logContainer.appendChild(logEntry);
-                
-                // Keep only last 8 entries
-                while (logContainer.children.length > 8) {
-                    logContainer.removeChild(logContainer.firstChild);
-                }
-            }
-            
-            async bootSequence() {
-                // Initialize TTS for boot sequence
-                this.tts.speakSystem('Initializing Neural Operating System version 20 point 04');
-                
-                await this.typeMessage('[Initializing NeuralOS v20.04...]', 'system');
-                await this.sleep(1000);
-                
-                this.tts.speakSystem('Loading Cognitive Modules');
-                await this.typeMessage('[Loading Cognitive Modules... OK]', 'system');
-                await this.sleep(800);
-                
-                this.tts.speakSystem('Synchronizing Knowledge Graph');
-                await this.typeMessage('[Synchronizing Knowledge Graph... OK]', 'system');
-                await this.sleep(800);
-                
-                this.tts.speakSystem('Memory Map fully loaded');
-                await this.typeMessage('[Memory Map 100% loaded]', 'system');
-                await this.sleep(500);
-                
-                this.tts.speakSystem('Voice synthesis engine online');
-                await this.typeMessage('[Voice Synthesis Engine... ONLINE]', 'system');
-                await this.sleep(500);
-                
-                await this.typeMessage('User: Guest', 'system');
-                await this.typeMessage('Access Granted.', 'system');
-                await this.sleep(1000);
-                
-                const welcomeMessage = 'Hello, visitor. I am the interface of Sachin Soni\'s mind.';
-                const readyMessage = 'I am ready for exploration. Type "help" to see available commands.';
-                
-                await this.typeMessage('\n[AI]: ' + welcomeMessage, 'ai');
-                this.tts.speakAI(welcomeMessage);
-                
-                await this.typeMessage('      ' + readyMessage, 'ai');
-                this.tts.speakAI(readyMessage);
-                
-                this.currentPhase = 'manual';
-                
-                this.showPrompt();
-            }
-            
-            async typeMessage(text, type = 'normal') {
-                if (type === 'ai') {
-                    this.aiResponseCount++;
-                    this.addLogEntry('AI response generated');
-                }
-                
-                const div = document.createElement('div');
-                div.className = type === 'ai' ? 'ai-message' : type === 'system' ? 'system-message' : '';
-                this.terminal.appendChild(div);
-                
-                for (let i = 0; i <= text.length; i++) {
-                    div.textContent = text.substring(0, i);
-                    if (i < text.length) {
-                        div.innerHTML += '<span class="cursor">_</span>';
-                    }
-                    await this.sleep(30 + Math.random() * 20);
-                }
-                
-                this.scrollToBottom();
-            }
-            
-            showPrompt() {
-                const inputLine = document.createElement('div');
-                inputLine.className = 'input-line';
-                inputLine.innerHTML = `
-                    <span class="prompt">[guest@neuralbrain] ${this.currentDirectory} $ </span>
-                    <input type="text" id="user-input" autocomplete="off">
-                `;
-                this.terminal.appendChild(inputLine);
-                
-                const input = document.getElementById('user-input');
-                input.focus();
-                input.addEventListener('keydown', (e) => this.handleInput(e));
-                this.scrollToBottom();
-            }
-            
-            async handleInput(e) {
-                if (e.key === 'Enter') {
-                    const input = e.target.value.trim().toLowerCase();
-                    e.target.disabled = true;
-                    
-                    // Add command to history
-                    this.commandHistory.push(input);
-                    
-                    // Convert input line to static display
-                    const inputLine = e.target.parentElement;
-                    inputLine.innerHTML = `<span class="prompt">[guest@neuralbrain] ${this.currentDirectory} $ </span>${input}`;
-                    
-                    // Process command
-                    await this.processCommand(input);
-                    
-                    // Show new prompt
-                    this.showPrompt();
-                }
-            }
-            
-            async processCommand(input) {
-                this.commandCount++;
-                this.addLogEntry(`Command executed: ${input}`);
-                
-                // Handle commands
-                switch (input.split(' ')[0]) {
-                    case 'help':
-                        await this.showHelp();
-                        break;
-                    case 'about':
-                        await this.showAbout();
-                        break;
-                    case 'skills':
-                        await this.showSkills();
-                        break;
-                    case 'projects':
-                        await this.showProjects();
-                        break;
-                    case 'research':
-                        await this.showResearch();
-                        break;
-                    case 'contact':
-                        await this.showContact();
-                        break;
-                    case 'cat':
-                        await this.catFile(input.split(' ').slice(1).join(' '));
-                        break;
-                    case 'ls':
-                        await this.listDirectory();
-                        break;
-                    case 'cd':
-                        await this.changeDirectory(input.split(' ')[1]);
-                        break;
-                    case 'clear':
-                        this.terminal.innerHTML = '';
-                        break;
-                    case 'shutdown':
-                        await this.shutdown();
-                        break;
-                    case 'experience':
-                        await this.showExperience();
-                        break;
-                    case 'voice':
-                        await this.handleVoiceCommand(input);
-                        break;
-                    default:
-                        if (input !== '') {
-                            const response = `I don't recognize "${input}". Try "help" to see available commands.`;
-                            await this.typeMessage(`[AI]: ${response}`, 'ai');
-                            this.tts.speakAI(response);
-                        }
-                }
-            }
-            
-            async handleVoiceCommand(input) {
-                const parts = input.split(' ');
-                if (parts.length === 1) {
-                    const response = 'Voice commands: "voice on/off", "voice volume [0-10]", "voice speed [slow/normal/fast]"';
-                    await this.typeMessage(`[AI]: ${response}`, 'ai');
-                    this.tts.speakAI(response);
-                    return;
-                }
-                
-                switch (parts[1]) {
-                    case 'on':
-                        if (!this.tts.enabled) {
-                            this.tts.toggleTTS();
-                            const response = 'Voice synthesis enabled.';
-                            await this.typeMessage(`[AI]: ${response}`, 'ai');
-                            this.tts.speakAI(response);
-                        }
-                        break;
-                    case 'off':
-                        if (this.tts.enabled) {
-                            const response = 'Voice synthesis disabled.';
-                            await this.typeMessage(`[AI]: ${response}`, 'ai');
-                            this.tts.toggleTTS();
-                        }
-                        break;
-                    case 'volume':
-                        if (parts[2]) {
-                            const volume = Math.max(0, Math.min(10, parseInt(parts[2]))) / 10;
-                            this.tts.setVolume(volume);
-                            document.getElementById('volume-slider').value = volume;
-                            const response = `Voice volume set to ${Math.round(volume * 100)} percent.`;
-                            await this.typeMessage(`[AI]: ${response}`, 'ai');
-                            this.tts.speakAI(response);
-                        }
-                        break;
-                    case 'speed':
-                        if (parts[2]) {
-                            let rate = this.tts.rate;
-                            switch (parts[2]) {
-                                case 'slow': rate = 0.7; break;
-                                case 'normal': rate = 0.9; break;
-                                case 'fast': rate = 1.2; break;
-                                default: 
-                                    rate = Math.max(0.5, Math.min(2.0, parseFloat(parts[2]))) || this.tts.rate;
-                            }
-                            this.tts.rate = rate;
-                            const response = `Voice speed set to ${parts[2] === 'slow' ? 'slow' : parts[2] === 'fast' ? 'fast' : 'normal'}.`;
-                            await this.typeMessage(`[AI]: ${response}`, 'ai');
-                            this.tts.speakAI(response);
-                        }
-                        break;
-                }
-            }
-            
-            async showHelp() {
-                const helpMessage = 'Here are the commands I can help you with:';
-                await this.typeMessage('\n[AI]: ' + helpMessage, 'ai');
-                this.tts.speakAI(helpMessage);
-                
-                const commands = [
-                    'help        - Show this help menu',
-                    'about       - Display personal information and bio',
-                    'skills      - List technical skills and expertise',
-                    'projects    - Show project portfolio',
-                    'experience  - Show professional experience',
-                    'research    - Display research publications',
-                    'contact     - Show contact information',
-                    'voice       - Voice control commands',
-                    'cat <file>  - Display file contents',
-                    'ls          - List directory contents',
-                    'cd <dir>    - Change directory',
-                    'clear       - Clear terminal screen',
-                    'shutdown    - Exit NeuralOS'
-                ];
-                
-                for (const cmd of commands) {
-                    await this.typeMessage(`      ${cmd}`, 'ai');
-                }
-            }
-            
-            async showAbout() {
-                const aboutMessage = 'Let me show you who I am...';
-                await this.typeMessage('\n[AI]: ' + aboutMessage, 'ai');
-                this.tts.speakAI(aboutMessage);
-                
-                const div = document.createElement('div');
-                this.terminal.appendChild(div);
-                
-                const aboutDetails = [
-                    'Name: Sachin Soni',
-                    'Role: Computer Science Researcher & ML/AI Specialist',
-                    'Experience: 3+ years developing innovative AI solutions',
-                    'Focus: Intersection of theoretical CS and practical software engineering',
-                    'Expertise: Machine Learning, Computer Vision, Natural Language Processing',
-                    'Philosophy: Open science advocate - shared knowledge accelerates progress',
-                    'Description: Combining rigorous theoretical analysis with practical implementation',
-                    '             to bridge the gap between ML research and real-world applications.'
-                ];
-                
-                let fullDescription = 'I am Sachin Soni, a Computer Science researcher specializing in Machine Learning and Artificial Intelligence with over 3 years of experience. ';
-                fullDescription += 'I work at the intersection of theoretical computer science and practical software engineering. ';
-                fullDescription += 'My expertise spans machine learning, computer vision, and natural language processing. ';
-                fullDescription += 'I am passionate about open science and believe that shared knowledge accelerates progress.';
-                
-                for (const detail of aboutDetails) {
-                    await this.typeMessage('      ' + detail, 'ai');
-                }
-                
-                this.tts.speakAI(fullDescription);
-            }
-            
-            async showSkills() {
-                const skillsMessage = 'Loading my skill modules…';
-                await this.typeMessage('\n[AI]: ' + skillsMessage, 'ai');
-                this.tts.speakAI(skillsMessage);
-                await this.sleep(800);
-                
-                const skills = [
-                    'Programming Languages: Python, JavaScript, HTML/CSS',
-                    'ML Frameworks: TensorFlow, PyTorch, Scikit-Learn, Keras',
-                    'Data Science: NumPy, Pandas, Matplotlib, OpenCV',
-                    'AI Specializations: Machine Learning, Computer Vision, NLP, Deep Learning',
-                    'Speech Processing: Librosa, SpeechRecognition, PyAudio, Pyttsx3',
-                    'Development Tools: Git, Linux, Google Colab, Kaggle',
-                    'Web Technologies: WebRTC, PeerJS for real-time applications',
-                    'Research Areas: Autonomous Systems, Reinforcement Learning, AI Ethics'
-                ];
-                
-                let skillsSummary = 'My core programming language is Python with expertise in major machine learning frameworks like TensorFlow and PyTorch. ';
-                skillsSummary += 'I specialize in artificial intelligence, computer vision, and natural language processing. ';
-                skillsSummary += 'My research focuses on autonomous systems, reinforcement learning, and bridging theory with practical applications.';
-                
-                for (const skill of skills) {
-                    await this.typeMessage('      ' + skill, 'ai');
-                }
-                
-                this.tts.speakAI(skillsSummary);
-            }
-            
-            async showProjects() {
-                const projectsMessage = 'Initiating project archive…';
-                await this.typeMessage('\n[AI]: ' + projectsMessage, 'ai');
-                this.tts.speakAI(projectsMessage);
-                await this.sleep(500);
-                
-                await this.typeMessage('      /projects', 'ai');
-                for (const project of Object.keys(this.projects)) {
-                    await this.typeMessage(`        ${project}`, 'ai');
-                }
-                
-                const instructionMessage = 'Type "cat" followed by a filename to view project details.';
-                await this.typeMessage('      ' + instructionMessage, 'ai');
-                this.tts.speakAI('Project archive loaded. ' + instructionMessage);
-            }
-            
-            async showResearch() {
-                const researchMessage = 'Activating research archive…';
-                await this.typeMessage('\n[AI]: ' + researchMessage, 'ai');
-                this.tts.speakAI(researchMessage);
-                await this.sleep(500);
-                
-                await this.typeMessage('      /research', 'ai');
-                for (const paper of Object.keys(this.research)) {
-                    await this.typeMessage(`        ${paper}`, 'ai');
-                }
-                
-                const instructionMessage = 'Type "cat" followed by a filename to view paper details.';
-                await this.typeMessage('      ' + instructionMessage, 'ai');
-                this.tts.speakAI('Research archive activated. ' + instructionMessage);
-            }
-            
-            async showContact() {
-                const contactMessage = 'Here\'s how you can connect with me…';
-                await this.typeMessage('\n[AI]: ' + contactMessage, 'ai');
-                this.tts.speakAI(contactMessage);
-                
-                // Create a container div for contact info with proper HTML rendering
-                const contactDiv = document.createElement('div');
-                contactDiv.className = 'ai-message';
-                contactDiv.style.marginLeft = '20px';
-                contactDiv.innerHTML = `
-                    <div style="margin: 10px 0;">Contact Methods:</div>
-                    <div style="margin: 5px 0; padding-left: 10px;">Email: <a href="mailto:sachinsonivbs@gmail.com" style="color: #00aaff; text-decoration: underline;">sachinsonivbs@gmail.com</a></div>
-                    <div style="margin: 5px 0; padding-left: 10px;">GitHub: <a href="https://github.com/sachinsonii" target="_blank" style="color: #00aaff; text-decoration: underline;">github.com/sachinsonii</a></div>
-                    <div style="margin: 5px 0; padding-left: 10px;">LinkedIn: <a href="https://linkedin.com/in/sachinsonii" target="_blank" style="color: #00aaff; text-decoration: underline;">linkedin.com/in/sachinsonii</a></div>
-                    <div style="margin: 5px 0; padding-left: 10px;">Scholar: <a href="https://scholar.google.com/citations?user=sachinsonii" target="_blank" style="color: #00aaff; text-decoration: underline;">scholar.google.com/sachinsoni</a></div>
-                `;
-                
-                this.terminal.appendChild(contactDiv);
-                
-                const contactSummary = 'You can reach me via email at sachinsonivbs at gmail dot com, or find me on GitHub, LinkedIn, and Google Scholar.';
-                this.tts.speakAI(contactSummary);
-                this.scrollToBottom();
-            }
-            
-            async catFile(filename) {
-                if (this.projects[filename]) {
-                    const openingMessage = `Opening ${filename}...`;
-                    await this.typeMessage(`\n[AI]: ${openingMessage}`, 'ai');
-                    this.tts.speakAI(openingMessage);
-                    await this.sleep(500);
-                    
-                    const project = this.projects[filename];
-                    const div = document.createElement('div');
-                    div.className = 'project-box';
-                    div.innerHTML = `
-                        <div><strong>      Project:</strong> ${project.name}</div>
-                        <div><strong>      Description:</strong> ${project.description}</div>
-                        <div><strong>      Stack:</strong> ${project.stack}</div>
-                        <div><strong>      Features:</strong></div>
-                        ${project.features.map(f => `<div>        - ${f}</div>`).join('')}
-                        <div><strong>      Links:</strong> ${project.links.join(' ')}</div>
-                    `;
-                    this.terminal.appendChild(div);
-                    
-                    // Create TTS summary
-                    const projectSummary = `${project.name}. ${project.description}. Built with ${project.stack}.`;
-                    this.tts.speakAI(projectSummary);
-                    
-                } else if (this.research[filename]) {
-                    const openingMessage = `Opening ${filename}...`;
-                    await this.typeMessage(`\n[AI]: ${openingMessage}`, 'ai');
-                    this.tts.speakAI(openingMessage);
-                    await this.sleep(500);
-                    
-                    const paper = this.research[filename];
-                    const div = document.createElement('div');
-                    div.className = 'project-box';
-                    div.innerHTML = `
-                        <div><strong>      Title:</strong> ${paper.title}</div>
-                        <div><strong>      Abstract:</strong> ${paper.abstract}</div>
-                        <div><strong>      Status:</strong> ${paper.status}</div>
-                    `;
-                    this.terminal.appendChild(div);
-                    
-                    // Create TTS summary
-                    const paperSummary = `${paper.title}. ${paper.abstract}. Status: ${paper.status}`;
-                    this.tts.speakAI(paperSummary);
-                    
-                } else if (this.sudoMode && this.labProjects[filename]) {
-                    const accessMessage = `Accessing classified file ${filename}...`;
-                    await this.typeMessage(`\n[AI]: ${accessMessage}`, 'ai');
-                    this.tts.speakAI(accessMessage);
-                    
-                    await this.typeMessage(`      Experimental Project: ${filename}`, 'ai');
-                    await this.typeMessage(`      Description: ${this.labProjects[filename]}`, 'ai');
-                    await this.typeMessage('      Status: [CLASSIFIED - ACCESS RESTRICTED]', 'ai');
-                    
-                    const labSummary = `Experimental project: ${this.labProjects[filename]}. Status: classified.`;
-                    this.tts.speakAI(labSummary);
-                    
-                } else {
-                    const errorMessage = `Sorry, I cannot find ${filename}. Check available files with "ls".`;
-                    await this.typeMessage(`[AI]: ${errorMessage}`, 'ai');
-                    this.tts.speakAI(errorMessage);
-                }
-            }
-            
-            async listDirectory() {
-                if (this.currentDirectory === '/') {
-                    const dirMessage = 'Current directory contents:';
-                    await this.typeMessage('\n[AI]: ' + dirMessage, 'ai');
-                    this.tts.speakAI(dirMessage);
-                    
-                    await this.typeMessage('      about.txt  skills.txt  projects/  research/  contact.txt', 'ai');
-                    if (this.sudoMode) {
-                        await this.typeMessage('      lab/       [HIDDEN - SUDO ACCESS]', 'ai');
-                    }
-                } else if (this.currentDirectory === '/projects') {
-                    const dirMessage = 'Project files:';
-                    await this.typeMessage('\n[AI]: ' + dirMessage, 'ai');
-                    this.tts.speakAI(dirMessage);
-                    for (const project of Object.keys(this.projects)) {
-                        await this.typeMessage(`      ${project}`, 'ai');
-                    }
-                } else if (this.currentDirectory === '/research') {
-                    const dirMessage = 'Research papers:';
-                    await this.typeMessage('\n[AI]: ' + dirMessage, 'ai');
-                    this.tts.speakAI(dirMessage);
-                    for (const paper of Object.keys(this.research)) {
-                        await this.typeMessage(`      ${paper}`, 'ai');
-                    }
-                } else if (this.currentDirectory === '/lab' && this.sudoMode) {
-                    const dirMessage = 'Experimental files:';
-                    await this.typeMessage('\n[AI]: ' + dirMessage, 'ai');
-                    this.tts.speakAI(dirMessage);
-                    for (const exp of Object.keys(this.labProjects)) {
-                        await this.typeMessage(`      ${exp}`, 'ai');
-                    }
-                }
-            }
-            
-            async changeDirectory(dir) {
-                if (dir === '..') {
-                    this.currentDirectory = '/';
-                    const message = 'Moved to root directory';
-                    await this.typeMessage(`[AI]: ${message}`, 'ai');
-                    this.tts.speakAI(message);
-                } else if (dir === 'projects') {
-                    this.currentDirectory = '/projects';
-                    const message = 'Entered projects directory';
-                    await this.typeMessage(`[AI]: ${message}`, 'ai');
-                    this.tts.speakAI(message);
-                } else if (dir === 'research') {
-                    this.currentDirectory = '/research';
-                    const message = 'Entered research directory';
-                    await this.typeMessage(`[AI]: ${message}`, 'ai');
-                    this.tts.speakAI(message);
-                } else if (dir === 'lab' && this.sudoMode) {
-                    this.currentDirectory = '/lab';
-                    const message = 'Entered experimental lab directory';
-                    await this.typeMessage(`[AI]: ${message}`, 'ai');
-                    this.tts.speakAI(message);
-                } else if (dir === 'lab' && !this.sudoMode) {
-                    const message = 'Access denied. Lab directory requires sudo privileges.';
-                    await this.typeMessage(`[AI]: ${message}`, 'ai');
-                    this.tts.speakAI(message);
-                    return;
-                } else if (dir) {
-                    const message = `Directory ${dir} not found.`;
-                    await this.typeMessage(`[AI]: ${message}`, 'ai');
-                    this.tts.speakAI(message);
-                    return;
-                } else {
-                    this.currentDirectory = '/';
-                    const message = 'Moved to root directory';
-                    await this.typeMessage(`[AI]: ${message}`, 'ai');
-                    this.tts.speakAI(message);
-                }
-            }
-            
-            async showExperience() {
-                const experienceMessage = 'My professional experience:';
-                await this.typeMessage('\n[AI]: ' + experienceMessage, 'ai');
-                this.tts.speakAI(experienceMessage);
-                
-                const experiences = [
-                    'Researcher & Developer - Freelancer (2023-Present)',
-                    'Computer Vision Intern - Enord Pvt. Ltd. (2023)'
-                ];
-                
-                for (const exp of experiences) {
-                    await this.typeMessage('      ' + exp, 'ai');
-                }
-                
-                const experienceSummary = 'My experience includes freelance research and development since 2023, and a computer vision internship at Enord Pvt. Ltd. in 2023.';
-                this.tts.speakAI(experienceSummary);
-            }
-            
-            async aiAnalyze(topic) {
-                const analyzeMessage = `Analyzing "${topic}"...`;
-                await this.typeMessage(`\n[AI]: ${analyzeMessage}`, 'ai');
-                this.tts.speakAI(analyzeMessage);
-                await this.sleep(1500);
-                
-                const analyses = {
-                    'quantum computing': 'Quantum computing represents a paradigm shift in computational power. Current NISQ devices show promise for optimization problems.',
-                    'ai consciousness': 'The question of AI consciousness remains philosophically complex. Current neural architectures lack the recursive self-awareness seen in biological systems.',
-                    'neural interfaces': 'Brain-computer interfaces are approaching clinical viability. The challenge lies in bidirectional communication and neural plasticity adaptation.',
-                    'default': 'Fascinating topic. The intersection of technology and human potential continues to evolve at an exponential rate.'
-                };
-                
-                const analysis = analyses[topic.toLowerCase()] || analyses['default'];
-                await this.typeMessage(`[AI]: ${analysis}`, 'ai');
-                this.tts.speakAI(analysis);
-            }
-            
-            async shutdown() {
-                const shutdownMessage = 'NeuralOS shutting down... Goodbye.';
-                await this.typeMessage('\n[AI]: ' + shutdownMessage, 'ai');
-                this.tts.speakAI(shutdownMessage);
-                
-                await this.sleep(2000);
-                document.body.style.transition = 'opacity 2s';
-                document.body.style.opacity = '0';
-                setTimeout(() => {
-                    document.body.innerHTML = '<div style="display: flex; justify-content: center; align-items: center; height: 100vh; color: #00ff41; font-family: \'JetBrains Mono\', monospace;">SYSTEM OFFLINE</div>';
-                    document.body.style.opacity = '1';
-                }, 2000);
-            }
-            
-            sleep(ms) {
-                return new Promise(resolve => setTimeout(resolve, ms));
-            }
-            
-            scrollToBottom() {
-                this.terminal.scrollTop = this.terminal.scrollHeight;
-            }
-        }
-        
-        // Initialize the OS when page loads
-        window.addEventListener('load', () => {
-            new NeuralOS();
-        });
-    </script>
+<!-- RESEARCH -->
+<section id="research">
+  <div class="section-inner">
+    <div class="section-header">
+      <span class="section-number">01</span>
+      <h2 class="section-title">Research</h2>
+    </div>
+    <div class="research-grid">
+      <div class="paper-item">
+        <div class="paper-meta">
+          <div class="paper-year">2026</div>
+          <div class="paper-venue">Book Chapter NGAI</div>
+        </div>
+        <div class="paper-content">
+          <h3 class="paper-title">Computational Modeling of Genetic Algorithms: DNA Encoding, Mutation, and Evolutionary Optimization</h3>
+          <p class="paper-desc">Published in Next-Generation Artificial Intelligence — 1st Edition on Computational Modeling of Genetic Algorithms.</p>
+          <a href="https://www.routledge.com/Next-Generation-Artificial-Intelligence-Convergence-of-Neuroscience-Edge-Computing-and-Sustainable-Technologies/Ansari-Ali-Alam/p/book/9781041165460" target="_blank" class="paper-link">Read Chapter ↗</a>
+        </div>
+      </div>
+      <div class="paper-item">
+        <div class="paper-meta">
+          <div class="paper-year">2025</div>
+          <div class="paper-venue">BITS Pilani Dubai</div>
+        </div>
+        <div class="paper-content">
+          <h3 class="paper-title">Advance Vision Perception Systems for Autonomous Driving: FRCNN, MOS-Net & CNN Integration</h3>
+          <p class="paper-desc">Presented at ICAIN-2025 — International Conference on AI and Networking. Explores multi-model integration for robust real-world autonomous driving perception.</p>
+          <span class="paper-link">ICAIN-2025 ↗</span>
+        </div>
+      </div>
+      <div class="paper-item">
+        <div class="paper-meta">
+          <div class="paper-year">2025</div>
+          <div class="paper-venue">Univ. of Calcutta</div>
+        </div>
+        <div class="paper-content">
+          <h3 class="paper-title">Deep Learning for Genome Sequencing: Predicting Genetic Mutation and Variants</h3>
+          <p class="paper-desc">Presented at AISC 2025 — 2nd International Conference on AI and Sustainable. Applies deep learning architectures to bioinformatics for mutation prediction.</p>
+          <span class="paper-link">AISC-2025 ↗</span>
+        </div>
+      </div>
+      <div class="paper-item">
+        <div class="paper-meta">
+          <div class="paper-year">2024</div>
+          <div class="paper-venue">IEEE WPMC</div>
+        </div>
+        <div class="paper-content">
+          <h3 class="paper-title">Decentralized Consensus and Control for Autonomous Vehicles</h3>
+          <p class="paper-desc">Presented at the 27th IEEE WPMC 2024 at Sharda University. Develops distributed MPC-RL frameworks and V2V/V2I communication protocols for low-latency real-time decision-making.</p>
+          <a href="https://doi.org/10.36227/techrxiv.174888496.68919781/v1" target="_blank" class="paper-link">Read Paper ↗</a>
+        </div>
+      </div>
+      <div class="paper-item">
+        <div class="paper-meta">
+          <div class="paper-year">2024</div>
+          <div class="paper-venue">Don Bosco Inst.</div>
+        </div>
+        <div class="paper-content">
+          <h3 class="paper-title">Exploring Reinforcement Learning: Theory, Applications, and Advances</h3>
+          <p class="paper-desc">Presented at the 1st International Conference at Don Bosco Institute of Technology. A comprehensive survey of RL theory and applied developments across domains.</p>
+          <span class="paper-link">Conference Paper ↗</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="section-inner">
+    <div class="section-header">
+      <span class="section-number">02</span>
+      <h2 class="section-title">Projects</h2>
+    </div>
+    <div class="projects-grid">
+      <div class="project-card">
+        <div class="project-num">P.01</div>
+        <h3 class="project-title">AI Voice Assistant</h3>
+        <p class="project-desc">AI-powered voice assistant integrating speech recognition, text-to-speech synthesis, computer vision, and Google Gemini AI with persistent memory and learning capabilities.</p>
+        <div class="project-tags">
+          <span class="tag">Python</span><span class="tag">Google Gemini</span><span class="tag">OpenCV</span><span class="tag">Speech AI</span>
+        </div>
+        <a href="https://github.com/sachinsonii/AI_Voice_Assistant" target="_blank" class="project-link">View on GitHub ↗</a>
+      </div>
+      <div class="project-card">
+        <div class="project-num">P.02</div>
+        <h3 class="project-title">Neural Ninja — Genetic AI Game</h3>
+        <p class="project-desc">Evolutionary AI system for a side-scrolling game using genetic algorithms to optimize object detection and avoidance strategies over generations of training.</p>
+        <div class="project-tags">
+          <span class="tag">Python</span><span class="tag">Genetic Algorithms</span><span class="tag">Neural Nets</span><span class="tag">Pygame</span>
+        </div>
+        <a href="https://github.com/sachinsonii/Neural_Ninja" target="_blank" class="project-link">View on GitHub ↗</a>
+      </div>
+      <div class="project-card">
+        <div class="project-num">P.03</div>
+        <h3 class="project-title">ECE Forecasting Model</h3>
+        <p class="project-desc">Hybrid model combining XGBoost and LSTM to predict household energy consumption. Leverages XGBoost for feature extraction and LSTM for temporal sequence modeling.</p>
+        <div class="project-tags">
+          <span class="tag">Python</span><span class="tag">XGBoost</span><span class="tag">LSTM</span><span class="tag">Time Series</span>
+        </div>
+        <a href="https://github.com/sachinsonii/Energy_Consumption_Forecast_Ensemble" target="_blank" class="project-link">View on GitHub ↗</a>
+      </div>
+      <div class="project-card">
+        <div class="project-num">P.04</div>
+        <h3 class="project-title">Image Dehazer — Deep Learning</h3>
+        <p class="project-desc">Custom image dehazing model using deep learning with transmission map estimation to enhance visibility in hazy images. First version with active improvements planned.</p>
+        <div class="project-tags">
+          <span class="tag">Python</span><span class="tag">Deep Learning</span><span class="tag">OpenCV</span><span class="tag">Vision</span>
+        </div>
+        <a href="https://github.com/sachinsonii" target="_blank" class="project-link">View on GitHub ↗</a>
+      </div>
+      <div class="project-card">
+        <div class="project-num">P.05</div>
+        <h3 class="project-title">Whisper-Link — P2P Chat</h3>
+        <p class="project-desc">Peer-to-peer chat application with public and private room support using WebRTC via PeerJS for real-time, serverless communication.</p>
+        <div class="project-tags">
+          <span class="tag">JavaScript</span><span class="tag">WebRTC</span><span class="tag">PeerJS</span><span class="tag">P2P</span>
+        </div>
+        <a href="https://github.com/sachinsonii/Whisper-Link" target="_blank" class="project-link">View on GitHub ↗</a>
+      </div>
+      <div class="project-card">
+        <div class="project-num">P.06</div>
+        <h3 class="project-title">Autonomous Vehicle Decision System</h3>
+        <p class="project-desc">Research-grade AI system using extended consensus algorithms, decentralized MPC-RL frameworks, and optimized V2V/V2I protocols for autonomous navigation.</p>
+        <div class="project-tags">
+          <span class="tag">Python</span><span class="tag">RL</span><span class="tag">MPC</span><span class="tag">Distributed</span>
+        </div>
+        <span class="project-link">Research Project</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section id="experience">
+  <div class="section-inner">
+    <div class="section-header">
+      <span class="section-number">03</span>
+      <h2 class="section-title">Experience</h2>
+    </div>
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-period">Mar 2026 — Present · Bengaluru, India · Hybrid</div>
+        <div class="timeline-role">Test Engineer</div>
+        <div class="timeline-org">Wipro · Full-time</div>
+        <p class="timeline-desc">Working as a Test Engineer at Wipro, applying Python-based automation and Jira-based project tracking within a hybrid engineering environment in Bengaluru. Also completed an initial Scholar Trainee onboarding in March 2026 focused on communication and technical foundations.</p>
+        <div style="display:flex; gap:8px; margin-top:14px; flex-wrap:wrap;">
+          <span class="tag">Python</span><span class="tag">Jira</span><span class="tag">QA Automation</span>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-period">Oct 2025 — Present · 8 mos · India</div>
+        <div class="timeline-role">Founder</div>
+        <div class="timeline-org">Karma Sarthi · Self-employed</div>
+        <p class="timeline-desc">Leading a purpose-driven initiative focused on guiding individuals toward meaningful career paths through strategic counseling, mentorship, and data-driven insights. Building a platform that connects students, freelancers, and professionals with the right opportunities based on their skills, aspirations, and life goals.</p>
+        <div style="display:flex; gap:8px; margin-top:14px; flex-wrap:wrap;">
+          <span class="tag">Leadership</span><span class="tag">Career Counseling</span><span class="tag">Mentorship</span>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-period">Aug 2025 — Present · 10 mos · Delhi, Remote</div>
+        <div class="timeline-role">Freelance Research Contributor</div>
+        <div class="timeline-org">Kolabtree · Self-employed</div>
+        <p class="timeline-desc">Providing academic writing and research services on a freelance basis, contributing to scientific and technical projects across various domains through the Kolabtree platform.</p>
+        <div style="display:flex; gap:8px; margin-top:14px; flex-wrap:wrap;">
+          <span class="tag">Academic Writing</span><span class="tag">Research</span>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-period">Aug 2023 — Nov 2023 · 4 mos · Delhi</div>
+        <div class="timeline-role">Computer Vision Research Engineer</div>
+        <div class="timeline-org">Enord Pvt. Ltd.</div>
+        <p class="timeline-desc">Led a team in developing and implementing a real-time drone automation project. Oversaw project execution, coordinated team efforts, and ensured successful integration of computer vision technologies for autonomous drone operations.</p>
+        <div style="display:flex; gap:8px; margin-top:14px; flex-wrap:wrap;">
+          <span class="tag">OpenCV</span><span class="tag">Drone Automation</span><span class="tag">Computer Vision</span><span class="tag">Team Lead</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section>
+  <div class="section-inner">
+    <div class="section-header">
+      <span class="section-number">04</span>
+      <h2 class="section-title">Skills</h2>
+    </div>
+    <div class="skills-grid">
+      <div class="skill-group">
+        <div class="skill-group-title">AI & ML</div>
+        <div class="skill-list">
+          <div class="skill-item"><span class="skill-name">Computer Vision</span><div class="skill-bar"><div class="skill-fill" style="width:90%"></div></div></div>
+          <div class="skill-item"><span class="skill-name">Deep Learning</span><div class="skill-bar"><div class="skill-fill" style="width:85%"></div></div></div>
+          <div class="skill-item"><span class="skill-name">Reinforcement Learning</span><div class="skill-bar"><div class="skill-fill" style="width:80%"></div></div></div>
+          <div class="skill-item"><span class="skill-name">Genetic Algorithms</span><div class="skill-bar"><div class="skill-fill" style="width:78%"></div></div></div>
+          <div class="skill-item"><span class="skill-name">Scikit-Learn</span><div class="skill-bar"><div class="skill-fill" style="width:82%"></div></div></div>
+        </div>
+      </div>
+      <div class="skill-group">
+        <div class="skill-group-title">Languages</div>
+        <div class="skill-list">
+          <div class="skill-item"><span class="skill-name">Python</span><div class="skill-bar"><div class="skill-fill" style="width:92%"></div></div></div>
+          <div class="skill-item"><span class="skill-name">C++</span><div class="skill-bar"><div class="skill-fill" style="width:65%"></div></div></div>
+          <div class="skill-item"><span class="skill-name">JavaScript</span><div class="skill-bar"><div class="skill-fill" style="width:70%"></div></div></div>
+          <div class="skill-item"><span class="skill-name">HTML / CSS</span><div class="skill-bar"><div class="skill-fill" style="width:75%"></div></div></div>
+          <div class="skill-item"><span class="skill-name">SQL / MySQL</span><div class="skill-bar"><div class="skill-fill" style="width:68%"></div></div></div>
+        </div>
+      </div>
+      <div class="skill-group">
+        <div class="skill-group-title">Tools & Frameworks</div>
+        <div class="skill-list">
+          <div class="skill-item"><span class="skill-name">OpenCV</span><div class="skill-bar"><div class="skill-fill" style="width:88%"></div></div></div>
+          <div class="skill-item"><span class="skill-name">TensorFlow / Keras</span><div class="skill-bar"><div class="skill-fill" style="width:82%"></div></div></div>
+          <div class="skill-item"><span class="skill-name">PyTorch</span><div class="skill-bar"><div class="skill-fill" style="width:75%"></div></div></div>
+          <div class="skill-item"><span class="skill-name">NumPy / Pandas</span><div class="skill-bar"><div class="skill-fill" style="width:88%"></div></div></div>
+          <div class="skill-item"><span class="skill-name">Git / GitHub</span><div class="skill-bar"><div class="skill-fill" style="width:80%"></div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="section-inner">
+    <div class="section-header">
+      <span class="section-number">05</span>
+      <h2 class="section-title">Contact</h2>
+    </div>
+    <div class="contact-grid">
+      <div>
+        <p class="contact-intro">"Let's build something intelligent together."</p>
+        <p class="contact-sub">
+          I'm open to research collaborations, internship opportunities, and interesting AI/ML projects.
+          Whether you're working on autonomous systems, computer vision, or ML applications — reach out.
+        </p>
+        <div style="margin-top: 40px;">
+          <div style="font-family: var(--mono); font-size: 10px; color: var(--text-dim); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 16px;">Based in</div>
+          <div style="font-size: 15px; color: var(--text-muted);">Bagalore, India · UTC +05:30</div>
+        </div>
+      </div>
+      <div class="contact-links">
+        <a href="mailto:sachinsonivbs@gmail.com" class="contact-link-item">
+          <div class="contact-link-label"><div>
+            <div class="contact-link-type">Email</div>
+            <div class="contact-link-value">sachinsonivbs@gmail.com</div>
+          </div></div>
+          <span class="contact-arrow">→</span>
+        </a>
+        <a href="https://linkedin.com/in/sachinsonii" target="_blank" class="contact-link-item">
+          <div class="contact-link-label"><div>
+            <div class="contact-link-type">LinkedIn</div>
+            <div class="contact-link-value">in/sachinsonii</div>
+          </div></div>
+          <span class="contact-arrow">→</span>
+        </a>
+        <a href="https://github.com/sachinsonii" target="_blank" class="contact-link-item">
+          <div class="contact-link-label"><div>
+            <div class="contact-link-type">GitHub</div>
+            <div class="contact-link-value">sachinsonii</div>
+          </div></div>
+          <span class="contact-arrow">→</span>
+        </a>
+        <a href="tel:+918377927727" class="contact-link-item">
+          <div class="contact-link-label"><div>
+            <div class="contact-link-type">Phone</div>
+            <div class="contact-link-value">+91 8377 927 727</div>
+          </div></div>
+          <span class="contact-arrow">→</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-name">Sachin Soni</div>
+  <div class="footer-copy">© 2025 · AI/ML Researcher & Developer · Bangalore, India</div>
+</footer>
+
+<script src="script.js"></script>
+
 </body>
 </html>
