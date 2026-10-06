@@ -1,403 +1,367 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Sachin Soni — AI/ML Researcher & Developer</title>
-<link rel="icon" href="logo.png" type="image/png">
-<link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:wght@300;400;500&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet"/>
-<link rel="stylesheet" href="styles.css"/>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Sachin Soni — Computer Science Researcher | AI/ML Developer</title>
+<meta name="description" content="Sachin Soni is a Computer Science Researcher and AI/ML Developer working across artificial intelligence, machine learning, computer vision, and intelligent systems.">
+<link rel="icon" type="image/png" href="assets/logo.png">
+<link rel="apple-touch-icon" href="assets/logo.png">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Sachin Soni — Computer Science Researcher | AI/ML Developer">
+<meta property="og:description" content="Building intelligent systems at the intersection of AI, machine learning, computer vision, and research.">
+<meta property="og:url" content="https://sachinsonii.github.io/Portfolio/">
+<meta name="twitter:card" content="summary">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Person","name":"Sachin Soni","jobTitle":"Computer Science Researcher, AI/ML Developer","email":"mailto:sachinsonivbs@gmail.com","address":{"@type":"PostalAddress","addressCountry":"IN"},"sameAs":["https://github.com/sachinsonii","https://www.linkedin.com/in/sachinsonii/","https://scholar.google.com/citations?user=EtBnew4AAAAJ&hl=en"]}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<script>
+/* Theme init — must run before paint to avoid flash. Keep inline. */
+(function(){
+  try{
+    var stored=localStorage.getItem('theme');
+    var sys=matchMedia('(prefers-color-scheme:light)').matches?'light':'dark';
+    document.documentElement.setAttribute('data-theme',
+      (stored==='light'||stored==='dark')?stored:sys);
+  }catch(e){
+    document.documentElement.setAttribute('data-theme','dark');
+  }
+})();
+</script>
 </head>
 <body>
-
-<!-- NAV -->
-<nav>
-  <a href="#" class="nav-logo">Sachin Soni</a>
-
-  <button class="hamburger" id="hamburgerBtn" aria-label="Menu">
-    <svg viewBox="0 0 24 24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-      <line x1="3" y1="12" x2="21" y2="12"></line>
-      <line x1="3" y1="6" x2="21" y2="6"></line>
-      <line x1="3" y1="18" x2="21" y2="18"></line>
-    </svg>
-  </button>
-
-  <ul class="nav-links" id="navLinks">
-    <li><a href="#research">Research</a></li>
+<header><div class="wrap"><nav aria-label="Main">
+<a class="logo" href="#top">SACHIN SONI</a>
+<div class="nav-right">
+  <ul id="menu">
+    <li><a href="#about">About</a></li>
+    <li><a href="#skills">Skills</a></li>
     <li><a href="#projects">Projects</a></li>
+    <li><a href="#github">GitHub</a></li>
+    <li><a href="#research">Domain</a></li>
+    <li><a href="#publications">Publications</a></li>
     <li><a href="#experience">Experience</a></li>
     <li><a href="#contact">Contact</a></li>
-    <li>
-      <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
-        <!-- Moon icon (shown in dark mode) -->
-        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--text-muted)">
-          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
-        </svg>
-        <!-- Sun icon (shown in light mode) -->
-        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--text-muted)">
-          <circle cx="12" cy="12" r="5"/>
-          <line x1="12" y1="1" x2="12" y2="3"/>
-          <line x1="12" y1="21" x2="12" y2="23"/>
-          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
-          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
-          <line x1="1" y1="12" x2="3" y2="12"/>
-          <line x1="21" y1="12" x2="23" y2="12"/>
-          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
-          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
-        </svg>
-      </button>
-    </li>
   </ul>
-</nav>
+  <button class="theme-toggle" type="button" aria-label="Toggle color theme" aria-pressed="false">
+    <svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true">
+      <circle cx="12" cy="12" r="4"/>
+      <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>
+    </svg>
+    <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+    </svg>
+  </button>
+  <button class="burger" aria-label="Toggle menu" aria-expanded="false" aria-controls="menu">☰</button>
+</div>
+</nav></div><div id="prog"></div></header>
 
-<!-- HERO -->
-<section class="hero">
-  <div class="hero-left">
-    <div class="hero-tag fade-up delay-1">CS Researcher & AI/ML Developer</div>
-    <h1 class="hero-name fade-up delay-2">Sachin<br/><span>Soni</span></h1>
-    <p class="hero-title fade-up delay-3">M.Tech @ BITS Pilani · AI/ML Researcher · Engineer</p>
-    <p class="hero-bio fade-up delay-4">
-      I build at the edge of intelligence — from autonomous drone systems and computer vision pipelines to published research in decentralized vehicle control and genomic deep learning. Currently pursuing M.Tech at BITS Pilani while working as a Test Engineer at Wipro and founding Karma Sarthi, a career mentorship platform. Four research papers. Real-world deployments. Always building.
-    </p>
-    <div class="hero-actions fade-up delay-5">
-      <a href="#projects" class="btn-primary">Projects</a>
-      <a href="https://github.com/sachinsonii" target="_blank" class="btn-ghost">GitHub ↗</a>
-    </div>
-    <div class="hero-socials fade-up delay-5">
-      <a href="https://linkedin.com/in/sachinsonii" target="_blank" class="social-link">LinkedIn</a>
-      <a href="https://github.com/sachinsonii" target="_blank" class="social-link">GitHub</a>
-      <a href="mailto:sachinsonivbs@gmail.com" class="social-link">Email</a>
+<main id="top">
+<section id="hero"><canvas id="net" aria-hidden="true"></canvas>
+<div class="wrap hero-in">
+<div class="mono">Computer Science Researcher · AI/ML Developer</div>
+<h1>Sachin Soni</h1>
+<p class="lead">Building intelligent systems at the intersection of <em>AI</em>, <em>machine learning</em>, <em>computer vision</em>, and research.</p>
+<p class="sub">Computer Science Researcher and AI/ML Developer focused on turning ideas into working intelligent systems.</p>
+<div class="btns"><a class="btn p" href="#projects">Explore Work <span>→</span></a><a class="btn" href="https://github.com/sachinsonii" target="_blank" rel="noopener noreferrer">View GitHub <span>↗</span></a></div>
+<div class="mono">India · AI/ML · Computer Vision · Research</div>
+</div></section>
+
+<div class="mq" aria-hidden="true"><div><span>Artificial Intelligence</span><i>✦</i><span>Machine Learning</span><i>✦</i><span>Computer Vision</span><i>✦</i><span>Reinforcement Learning</span><i>✦</i><span>Genetic Algorithms</span><i>✦</i><span>Autonomous Systems</span><i>✦</i><span>Applied AI</span><i>✦</i><span>Artificial Intelligence</span><i>✦</i><span>Machine Learning</span><i>✦</i><span>Computer Vision</span><i>✦</i><span>Reinforcement Learning</span><i>✦</i><span>Genetic Algorithms</span><i>✦</i><span>Autonomous Systems</span><i>✦</i><span>Applied AI</span><i>✦</i></div></div>
+
+<!-- 01 — ABOUT -->
+<section id="about"><div class="wrap grid2">
+<div><div class="mono">01 — About</div><h2>About Me</h2><figure class="photo reveal" role="img" aria-label="Photo of Sachin Soni"><img src="assets/image.png" alt="Sachin Soni" loading="lazy"></figure></div>
+<div class="reveal">
+<p class="big">I work across research and engineering, exploring how intelligent systems can solve complex real-world problems.</p>
+<p class="sub">My interests span artificial intelligence, machine learning, computer vision, reinforcement learning, and applied AI. I enjoy building practical AI systems and exploring research-driven approaches to real problems.</p>
+<div class="mono" style="margin-top:28px">Focus</div>
+<div class="tags"><span class="tag">Artificial Intelligence</span><span class="tag">Machine Learning</span><span class="tag">Computer Vision</span><span class="tag">Research</span><span class="tag">Intelligent Systems</span></div>
+</div></div></section>
+
+<!-- 02 — TECH STACK -->
+<section id="skills"><div class="wrap">
+<div class="mono">02 — Tech Stack</div><h2>Tools &amp; Technologies</h2>
+<div class="tslider reveal" id="tslider" role="region" aria-label="Tech stack slider — drag or scroll horizontally">
+  <div class="ttrack" id="ttrack">
+    <ul class="tlist">
+      <li class="titem"><i style="--logo:url(https://cdn.simpleicons.org/python)" aria-hidden="true"></i><span>Python</span></li>
+      <li class="titem"><i style="--logo:url(https://cdn.simpleicons.org/cplusplus)" aria-hidden="true"></i><span>C++</span></li>
+      <li class="titem"><i style="--logo:url(https://cdn.simpleicons.org/javascript)" aria-hidden="true"></i><span>JavaScript</span></li>
+      <li class="titem"><i style="--logo:url(https://cdn.simpleicons.org/html5)" aria-hidden="true"></i><span>HTML5</span></li>
+      <li class="titem"><i style="--logo:url(https://cdn.simpleicons.org/css)" aria-hidden="true"></i><span>CSS</span></li>
+      <li class="titem"><i style="--logo:url(https://cdn.simpleicons.org/mysql)" aria-hidden="true"></i><span>MySQL</span></li>
+      <li class="titem"><i style="--logo:url(https://cdn.simpleicons.org/tensorflow)" aria-hidden="true"></i><span>TensorFlow</span></li>
+      <li class="titem"><i style="--logo:url(https://cdn.simpleicons.org/pytorch)" aria-hidden="true"></i><span>PyTorch</span></li>
+      <li class="titem"><i style="--logo:url(https://cdn.simpleicons.org/keras)" aria-hidden="true"></i><span>Keras</span></li>
+      <li class="titem"><i style="--logo:url(https://cdn.simpleicons.org/scikitlearn)" aria-hidden="true"></i><span>Scikit-Learn</span></li>
+      <li class="titem"><i style="--logo:url(https://cdn.simpleicons.org/opencv)" aria-hidden="true"></i><span>OpenCV</span></li>
+      <li class="titem"><i style="--logo:url(https://cdn.simpleicons.org/numpy)" aria-hidden="true"></i><span>NumPy</span></li>
+      <li class="titem"><i style="--logo:url(https://cdn.simpleicons.org/pandas)" aria-hidden="true"></i><span>Pandas</span></li>
+      <li class="titem"><i style="--logo:url(https://cdn.simpleicons.org/jupyter)" aria-hidden="true"></i><span>Jupyter</span></li>
+      <li class="titem"><i style="--logo:url(https://cdn.simpleicons.org/git)" aria-hidden="true"></i><span>Git</span></li>
+      <li class="titem"><i style="--logo:url(https://cdn.simpleicons.org/github)" aria-hidden="true"></i><span>GitHub</span></li>
+      <li class="titem"><i style="--logo:url(https://cdn.simpleicons.org/linux)" aria-hidden="true"></i><span>Linux</span></li>
+      <li class="titem"><i style="--logo:url(https://cdn.simpleicons.org/googlecolab)" aria-hidden="true"></i><span>Google Colab</span></li>
+      <li class="titem"><i style="--logo:url(https://cdn.simpleicons.org/kaggle)" aria-hidden="true"></i><span>Kaggle</span></li>
+      <li class="titem"><i style="--logo:url(https://cdn.simpleicons.org/googlegemini)" aria-hidden="true"></i><span>Google Gemini</span></li>
+      <li class="titem"><i style="--logo:url(https://cdn.simpleicons.org/jira)" aria-hidden="true"></i><span>Jira</span></li>
+    </ul>
+  </div>
+</div>
+<div class="mono tslider-hint">Drag to explore · auto-scrolls · pauses on hover</div>
+</div></section>
+
+<!-- 03 — PROJECTS -->
+<section id="projects"><div class="wrap">
+<div class="mono">03 — Projects</div><h2>Featured Projects</h2>
+<div class="pslider reveal" id="pslider">
+  <div class="pviewport">
+    <div class="ptrack" id="ptrack">
+
+      <div class="pcard">
+        <div class="flip-inner">
+          <button type="button" class="flip-face flip-front" aria-label="AI Voice Assistant — click to flip and see details">
+            <div class="flip-bg" style="background-image:url('assets/P1.png')"></div>
+            <span class="num">01</span><span class="mono cat">Applied AI</span>
+            <h3>AI Voice Assistant</h3>
+            <span class="mono flip-hint">Click to flip →</span>
+          </button>
+          <div class="flip-face flip-back">
+            <span class="num">01 · Applied AI</span>
+            <h3>AI Voice Assistant</h3>
+            <p>An intelligent voice assistant combining speech recognition, text-to-speech, computer vision and Google Gemini AI, with memory and learning capabilities.</p>
+            <div class="tags"><span class="tag">Python</span><span class="tag">Speech Recognition</span><span class="tag">Computer Vision</span><span class="tag">Google Gemini</span><span class="tag">TTS</span></div>
+            <a class="go" href="https://github.com/sachinsonii/AI_Voice_Assistant" target="_blank" rel="noopener noreferrer">View on GitHub <b>→</b></a>
+            <span class="mono flip-hint">Click anywhere to flip back ←</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="pcard">
+        <div class="flip-inner">
+          <button type="button" class="flip-face flip-front" aria-label="Neural Ninja — click to flip and see details">
+            <div class="flip-bg" style="background-image:url('assets/P2.png')"></div>
+            <span class="num">02</span><span class="mono cat">Evolutionary AI</span>
+            <h3>Neural Ninja</h3>
+            <span class="mono flip-hint">Click to flip →</span>
+          </button>
+          <div class="flip-face flip-back">
+            <span class="num">02 · Evolutionary AI</span>
+            <h3>Neural Ninja</h3>
+            <p>An AI-powered side-scrolling game where a ninja learns to survive using a genetic algorithm that evolves across generations.</p>
+            <div class="tags"><span class="tag">Python</span><span class="tag">Genetic Algorithms</span><span class="tag">Game AI</span><span class="tag">Evolutionary Computing</span></div>
+            <a class="go" href="https://github.com/sachinsonii/Neural_Ninja" target="_blank" rel="noopener noreferrer">View on GitHub <b>→</b></a>
+            <span class="mono flip-hint">Click anywhere to flip back ←</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="pcard">
+        <div class="flip-inner">
+          <button type="button" class="flip-face flip-front" aria-label="Energy Consumption Forecast Ensemble — click to flip and see details">
+            <div class="flip-bg" style="background-image:url('assets/P3.png')"></div>
+            <span class="num">03</span><span class="mono cat">Machine Learning</span>
+            <h3>Energy Consumption Forecast Ensemble</h3>
+            <span class="mono flip-hint">Click to flip →</span>
+          </button>
+          <div class="flip-face flip-back">
+            <span class="num">03 · Machine Learning</span>
+            <h3>Energy Consumption Forecast Ensemble</h3>
+            <p>A hybrid forecasting system using XGBoost and LSTM models to predict household energy consumption from time-series data.</p>
+            <div class="tags"><span class="tag">Python</span><span class="tag">XGBoost</span><span class="tag">LSTM</span><span class="tag">Time Series</span><span class="tag">Jupyter</span></div>
+            <a class="go" href="https://github.com/sachinsonii/Energy_Consumption_Forecast_Ensemble" target="_blank" rel="noopener noreferrer">View on GitHub <b>→</b></a>
+            <span class="mono flip-hint">Click anywhere to flip back ←</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="pcard">
+        <div class="flip-inner">
+          <button type="button" class="flip-face flip-front" aria-label="Whisper-Link — click to flip and see details">
+            <div class="flip-bg" style="background-image:url('assets/P4.png')"></div>
+            <span class="num">04</span><span class="mono cat">Real-time Systems</span>
+            <h3>Whisper-Link</h3>
+            <span class="mono flip-hint">Click to flip →</span>
+          </button>
+          <div class="flip-face flip-back">
+            <span class="num">04 · Real-time Systems</span>
+            <h3>Whisper-Link</h3>
+            <p>A peer-to-peer chat application with public and private rooms, built on WebRTC through PeerJS — direct browser-to-browser communication without a central server.</p>
+            <div class="tags"><span class="tag">JavaScript</span><span class="tag">WebRTC</span><span class="tag">PeerJS</span><span class="tag">P2P</span></div>
+            <a class="go" href="https://github.com/sachinsonii/Whisper-Link" target="_blank" rel="noopener noreferrer">View on GitHub <b>→</b></a>
+            <span class="mono flip-hint">Click anywhere to flip back ←</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="pcard">
+        <div class="flip-inner">
+          <button type="button" class="flip-face flip-front" aria-label="Image Dehazer — click to flip and see details">
+            <div class="flip-bg" style="background-image:url('assets/P5.png')"></div>
+            <span class="num">05</span><span class="mono cat">Deep Learning</span>
+            <h3>Image Dehazer</h3>
+            <span class="mono flip-hint">Click to flip →</span>
+          </button>
+          <div class="flip-face flip-back">
+            <span class="num">05 · Deep Learning</span>
+            <h3>Image Dehazer — Deep Learning</h3>
+            <p>Custom image dehazing model using deep learning with transmission map estimation to enhance visibility in hazy images.</p>
+            <div class="tags"><span class="tag">Python</span><span class="tag">Deep Learning</span><span class="tag">Image Processing</span><span class="tag">Computer Vision</span></div>
+            <a class="go" href="https://github.com/sachinsonii" target="_blank" rel="noopener noreferrer">View on GitHub <b>→</b></a>
+            <span class="mono flip-hint">Click anywhere to flip back ←</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="pcard">
+        <div class="flip-inner">
+          <button type="button" class="flip-face flip-front" aria-label="Autonomous Vehicle Decision System — click to flip and see details">
+            <div class="flip-bg" style="background-image:url('P6.png')"></div>
+            <span class="num">06</span><span class="mono cat">Research</span>
+            <h3>Autonomous Vehicle Decision System</h3>
+            <span class="mono flip-hint">Click to flip →</span>
+          </button>
+          <div class="flip-face flip-back">
+            <span class="num">06 · Research</span>
+            <h3>Autonomous Vehicle Decision System</h3>
+            <p>Research-grade AI system using extended consensus algorithms, decentralized MPC-RL frameworks, and optimized V2V/V2I protocols for autonomous navigation.</p>
+            <div class="tags"><span class="tag">Python</span><span class="tag">Reinforcement Learning</span><span class="tag">Autonomous Systems</span><span class="tag">MPC</span></div>
+            <a class="go" href="https://github.com/sachinsonii" target="_blank" rel="noopener noreferrer">Research Project <b>→</b></a>
+            <span class="mono flip-hint">Click anywhere to flip back ←</span>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
-
-  <div class="hero-right fade-up delay-3">
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
-      <div class="stat-block">
-        <div class="stat-num">4</div>
-        <div class="stat-label">Papers Published</div>
-      </div>
-      <div class="stat-block">
-        <div class="stat-num">BITS</div>
-        <div class="stat-label">M.Tech · Pilani</div>
-      </div>
-      <div class="stat-block">
-        <div class="stat-num">14+</div>
-        <div class="stat-label">GitHub Repos</div>
-      </div>
-      <div class="stat-block">
-        <div class="stat-num">3+</div>
-        <div class="stat-label">Years in AI/ML</div>
-      </div>
-    </div>
-
-    <div style="padding: 28px 32px; border: 1px solid var(--border); margin-top: 8px;">
-      <div style="font-family: var(--mono); font-size: 10px; color: var(--text-dim); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 16px;">Current Focus</div>
-      <div style="display: flex; flex-direction: column; gap: 10px;">
-        <div style="display: flex; align-items: center; gap: 10px; font-size: 14px; color: var(--text-muted);">
-          <span style="width: 6px; height: 6px; background: var(--accent); display: inline-block; flex-shrink: 0;"></span>
-          Autonomous Vehicle Decision Systems
-        </div>
-        <div style="display: flex; align-items: center; gap: 10px; font-size: 14px; color: var(--text-muted);">
-          <span style="width: 6px; height: 6px; background: var(--accent); display: inline-block; flex-shrink: 0;"></span>
-          Deep Learning for Genome Sequencing
-        </div>
-        <div style="display: flex; align-items: center; gap: 10px; font-size: 14px; color: var(--text-muted);">
-          <span style="width: 6px; height: 6px; background: var(--accent); display: inline-block; flex-shrink: 0;"></span>
-          Advanced Vision Perception Systems
-        </div>
-      </div>
-    </div>
+  <div class="pnav">
+    <button class="parrow" type="button" data-dir="-1" aria-label="Previous projects">←</button>
+    <div class="pdots" id="pdots" role="group" aria-label="Project slides"></div>
+    <button class="parrow" type="button" data-dir="1" aria-label="Next projects">→</button>
   </div>
-</section>
+</div>
+</div></section>
 
-<!-- RESEARCH -->
-<section id="research">
-  <div class="section-inner">
-    <div class="section-header">
-      <span class="section-number">01</span>
-      <h2 class="section-title">Research</h2>
+<!-- 04 — GITHUB -->
+<section id="github"><div class="wrap grid2">
+<div><div class="mono">04 — Open Source</div><h2>Built in Public</h2></div>
+<div class="reveal"><p class="big">A selection of experiments, research projects, and software built around AI and intelligent systems.</p>
+<a class="btn p" href="https://github.com/sachinsonii" target="_blank" rel="noopener noreferrer">Explore GitHub <span>→</span></a></div>
+</div></section>
+
+<!-- 05 — RESEARCH -->
+<section id="research"><div class="wrap">
+<div class="mono">05 — Domain</div><h2>Domain &amp; Interests</h2>
+<div class="rg reveal">
+<div><span class="mono">R.01</span><h3>Artificial Intelligence</h3><p>Exploring intelligent systems and AI-driven applications.</p></div>
+<div><span class="mono">R.02</span><h3>Machine Learning</h3><p>Developing and experimenting with predictive and learning-based models.</p></div>
+<div><span class="mono">R.03</span><h3>Computer Vision</h3><p>Working with visual understanding and computer vision systems.</p></div>
+<div><span class="mono">R.04</span><h3>Reinforcement Learning</h3><p>Exploring learning agents and decision-making systems.</p></div>
+<div><span class="mono">R.05</span><h3>Autonomous Systems</h3><p>Research interest in intelligent decision-making for autonomous systems.</p></div>
+<div><span class="mono">R.06</span><h3>Applied AI</h3><p>Turning research concepts into usable software and intelligent applications.</p></div>
+</div>
+</div></section>
+
+<!-- 06 — PUBLICATIONS -->
+<section id="publications"><div class="wrap">
+<div class="mono">06 — Publications</div><h2>Research &amp; Publications</h2>
+
+<div class="reveal">
+
+  <article class="pub">
+    <span class="mono">2025<br>Book Chapter</span>
+    <div>
+      <h3>Computational Modeling of Genetic Algorithms: DNA Encoding, Mutation, and Evolutionary Optimization</h3>
+      <p class="pub-authors">Sachin Soni, Komal Sharma</p>
+      <p>Published in <em>Next-Generation Artificial Intelligence — Convergence of Neuroscience, Edge Computing, and Sustainable Technologies</em> (1st Edition). Explores computational modeling approaches to genetic algorithms with DNA-inspired encoding and evolutionary optimization strategies.</p>
     </div>
-    <div class="research-grid">
-      <div class="paper-item">
-        <div class="paper-meta">
-          <div class="paper-year">2026</div>
-          <div class="paper-venue">Book Chapter NGAI</div>
-        </div>
-        <div class="paper-content">
-          <h3 class="paper-title">Computational Modeling of Genetic Algorithms: DNA Encoding, Mutation, and Evolutionary Optimization</h3>
-          <p class="paper-desc">Published in Next-Generation Artificial Intelligence — 1st Edition on Computational Modeling of Genetic Algorithms.</p>
-          <a href="https://www.routledge.com/Next-Generation-Artificial-Intelligence-Convergence-of-Neuroscience-Edge-Computing-and-Sustainable-Technologies/Ansari-Ali-Alam/p/book/9781041165460" target="_blank" class="paper-link">Read Chapter ↗</a>
-        </div>
-      </div>
-      <div class="paper-item">
-        <div class="paper-meta">
-          <div class="paper-year">2025</div>
-          <div class="paper-venue">BITS Pilani Dubai</div>
-        </div>
-        <div class="paper-content">
-          <h3 class="paper-title">Advance Vision Perception Systems for Autonomous Driving: FRCNN, MOS-Net & CNN Integration</h3>
-          <p class="paper-desc">Presented at ICAIN-2025 — International Conference on AI and Networking. Explores multi-model integration for robust real-world autonomous driving perception.</p>
-          <span class="paper-link">ICAIN-2025 ↗</span>
-        </div>
-      </div>
-      <div class="paper-item">
-        <div class="paper-meta">
-          <div class="paper-year">2025</div>
-          <div class="paper-venue">Univ. of Calcutta</div>
-        </div>
-        <div class="paper-content">
-          <h3 class="paper-title">Deep Learning for Genome Sequencing: Predicting Genetic Mutation and Variants</h3>
-          <p class="paper-desc">Presented at AISC 2025 — 2nd International Conference on AI and Sustainable. Applies deep learning architectures to bioinformatics for mutation prediction.</p>
-          <span class="paper-link">AISC-2025 ↗</span>
-        </div>
-      </div>
-      <div class="paper-item">
-        <div class="paper-meta">
-          <div class="paper-year">2024</div>
-          <div class="paper-venue">IEEE WPMC</div>
-        </div>
-        <div class="paper-content">
-          <h3 class="paper-title">Decentralized Consensus and Control for Autonomous Vehicles</h3>
-          <p class="paper-desc">Presented at the 27th IEEE WPMC 2024 at Sharda University. Develops distributed MPC-RL frameworks and V2V/V2I communication protocols for low-latency real-time decision-making.</p>
-          <a href="https://doi.org/10.36227/techrxiv.174888496.68919781/v1" target="_blank" class="paper-link">Read Paper ↗</a>
-        </div>
-      </div>
-      <div class="paper-item">
-        <div class="paper-meta">
-          <div class="paper-year">2024</div>
-          <div class="paper-venue">Don Bosco Inst.</div>
-        </div>
-        <div class="paper-content">
-          <h3 class="paper-title">Exploring Reinforcement Learning: Theory, Applications, and Advances</h3>
-          <p class="paper-desc">Presented at the 1st International Conference at Don Bosco Institute of Technology. A comprehensive survey of RL theory and applied developments across domains.</p>
-          <span class="paper-link">Conference Paper ↗</span>
-        </div>
-      </div>
+    <a class="btn" href="https://www.routledge.com/Next-Generation-Artificial-Intelligence-Convergence-of-Neuroscience-Edge-Computing-and-Sustainable-Technologies/Ansari-Ali-Alam/p/book/9781041165460" target="_blank" rel="noopener noreferrer">Read Chapter <span>→</span></a>
+  </article>
+
+  <article class="pub">
+    <span class="mono">2025<br>ICAIN-2025</span>
+    <div>
+      <h3>Advanced Vision Perception Systems for Autonomous Driving: FRCNN, MOS-Net, and CNN Integration</h3>
+      <p class="pub-authors">Salim Al-Hudaify, Sachin Soni, Ankita Gulati, Manzoor Ansari, Syed Arshad Ali</p>
+      <p>Presented at the <em>International Conference on Artificial Intelligence and Networks (ICAIN 2025)</em>, BITS Pilani. Explores multi-model integration (Faster R-CNN, MOS-Net, and CNN) for robust real-world autonomous driving perception systems.</p>
     </div>
+    <a class="btn" href="https://link.springer.com/conference/icain" target="_blank" rel="noopener noreferrer">Read Paper <span>→</span></a>
+  </article>
+
+  <article class="pub">
+    <span class="mono">2025<br>AISC-2025</span>
+    <div>
+      <h3>Deep Learning for Genome Sequencing: Predicting Genetic Mutation and Variants</h3>
+      <p class="pub-authors">Sachin Soni</p>
+      <p>Presented at the <em>2nd International Conference on AI and Sustainable Computing (AISC 2025)</em>. Applies deep learning architectures to bioinformatics for accurate mutation prediction and genetic variant classification.</p>
+    </div>
+    <a class="btn" href="https://scholar.google.com/citations?user=EtBnew4AAAAJ&amp;hl=en" target="_blank" rel="noopener noreferrer">Read Paper <span>→</span></a>
+  </article>
+
+  <article class="pub">
+    <span class="mono">2024<br>WPMC 24 IEEE</span>
+    <div>
+      <h3>Decentralized Consensus and Control for Autonomous Vehicles</h3>
+      <p class="pub-authors">Sachin Soni</p>
+      <p>Presented at the <em>27th IEEE Wireless Personal Multimedia Communications (WPMC 2024)</em> at Sharda University. Develops distributed MPC-RL frameworks and V2V/V2I communication protocols for low-latency real-time decision-making in autonomous vehicle platoons.</p>
+    </div>
+    <a class="btn" href="https://doi.org/10.36227/techrxiv.174888496.68919781/v1" target="_blank" rel="noopener noreferrer">Read Paper <span>→</span></a>
+  </article>
+
+  <article class="pub">
+    <span class="mono">2024<br>DONBOSCODELHI-24</span>
+    <div>
+      <h3>Exploring Reinforcement Learning: Theory, Applications, and Advances</h3>
+      <p class="pub-authors">Sachin Soni</p>
+      <p>Presented at the <em>1st International Conference at Don Bosco Institute of Technology, Delhi</em>. A comprehensive survey of reinforcement learning theory and applied developments across domains, covering key algorithms and real-world applications.</p>
+    </div>
+    <a class="btn" href="https://scholar.google.com/citations?user=EtBnew4AAAAJ&amp;hl=en" target="_blank" rel="noopener noreferrer">Read Paper <span>→</span></a>
+  </article>
+
+</div>
+
+<div class="scholar reveal">
+  <div>
+    <div class="mono">Research</div>
+    <strong style="font-size:1.4rem">Google Scholar</strong>
+    <p>Explore my publications, research interests and academic work.</p>
   </div>
-</section>
+  <a class="btn p" href="https://scholar.google.com/citations?user=EtBnew4AAAAJ&amp;hl=en" target="_blank" rel="noopener noreferrer">View Google Scholar <span>→</span></a>
+</div>
 
-<!-- PROJECTS -->
-<section id="projects">
-  <div class="section-inner">
-    <div class="section-header">
-      <span class="section-number">02</span>
-      <h2 class="section-title">Projects</h2>
-    </div>
-    <div class="projects-grid">
-      <div class="project-card">
-        <div class="project-num">P.01</div>
-        <h3 class="project-title">AI Voice Assistant</h3>
-        <p class="project-desc">AI-powered voice assistant integrating speech recognition, text-to-speech synthesis, computer vision, and Google Gemini AI with persistent memory and learning capabilities.</p>
-        <div class="project-tags">
-          <span class="tag">Python</span><span class="tag">Google Gemini</span><span class="tag">OpenCV</span><span class="tag">Speech AI</span>
-        </div>
-        <a href="https://github.com/sachinsonii/AI_Voice_Assistant" target="_blank" class="project-link">View on GitHub ↗</a>
-      </div>
-      <div class="project-card">
-        <div class="project-num">P.02</div>
-        <h3 class="project-title">Neural Ninja — Genetic AI Game</h3>
-        <p class="project-desc">Evolutionary AI system for a side-scrolling game using genetic algorithms to optimize object detection and avoidance strategies over generations of training.</p>
-        <div class="project-tags">
-          <span class="tag">Python</span><span class="tag">Genetic Algorithms</span><span class="tag">Neural Nets</span><span class="tag">Pygame</span>
-        </div>
-        <a href="https://github.com/sachinsonii/Neural_Ninja" target="_blank" class="project-link">View on GitHub ↗</a>
-      </div>
-      <div class="project-card">
-        <div class="project-num">P.03</div>
-        <h3 class="project-title">ECE Forecasting Model</h3>
-        <p class="project-desc">Hybrid model combining XGBoost and LSTM to predict household energy consumption. Leverages XGBoost for feature extraction and LSTM for temporal sequence modeling.</p>
-        <div class="project-tags">
-          <span class="tag">Python</span><span class="tag">XGBoost</span><span class="tag">LSTM</span><span class="tag">Time Series</span>
-        </div>
-        <a href="https://github.com/sachinsonii/Energy_Consumption_Forecast_Ensemble" target="_blank" class="project-link">View on GitHub ↗</a>
-      </div>
-      <div class="project-card">
-        <div class="project-num">P.04</div>
-        <h3 class="project-title">Image Dehazer — Deep Learning</h3>
-        <p class="project-desc">Custom image dehazing model using deep learning with transmission map estimation to enhance visibility in hazy images. First version with active improvements planned.</p>
-        <div class="project-tags">
-          <span class="tag">Python</span><span class="tag">Deep Learning</span><span class="tag">OpenCV</span><span class="tag">Vision</span>
-        </div>
-        <a href="https://github.com/sachinsonii" target="_blank" class="project-link">View on GitHub ↗</a>
-      </div>
-      <div class="project-card">
-        <div class="project-num">P.05</div>
-        <h3 class="project-title">Whisper-Link — P2P Chat</h3>
-        <p class="project-desc">Peer-to-peer chat application with public and private room support using WebRTC via PeerJS for real-time, serverless communication.</p>
-        <div class="project-tags">
-          <span class="tag">JavaScript</span><span class="tag">WebRTC</span><span class="tag">PeerJS</span><span class="tag">P2P</span>
-        </div>
-        <a href="https://github.com/sachinsonii/Whisper-Link" target="_blank" class="project-link">View on GitHub ↗</a>
-      </div>
-      <div class="project-card">
-        <div class="project-num">P.06</div>
-        <h3 class="project-title">Autonomous Vehicle Decision System</h3>
-        <p class="project-desc">Research-grade AI system using extended consensus algorithms, decentralized MPC-RL frameworks, and optimized V2V/V2I protocols for autonomous navigation.</p>
-        <div class="project-tags">
-          <span class="tag">Python</span><span class="tag">RL</span><span class="tag">MPC</span><span class="tag">Distributed</span>
-        </div>
-        <span class="project-link">Research Project</span>
-      </div>
-    </div>
-  </div>
-</section>
+</div></section>
 
-<!-- EXPERIENCE -->
-<section id="experience">
-  <div class="section-inner">
-    <div class="section-header">
-      <span class="section-number">03</span>
-      <h2 class="section-title">Experience</h2>
-    </div>
-    <div class="timeline">
-      <div class="timeline-item">
-        <div class="timeline-dot"></div>
-        <div class="timeline-period">Mar 2026 — Present · Bengaluru, India · Hybrid</div>
-        <div class="timeline-role">Test Engineer</div>
-        <div class="timeline-org">Wipro · Full-time</div>
-        <p class="timeline-desc">Working as a Test Engineer at Wipro, applying Python-based automation and Jira-based project tracking within a hybrid engineering environment in Bengaluru. Also completed an initial Scholar Trainee onboarding in March 2026 focused on communication and technical foundations.</p>
-        <div style="display:flex; gap:8px; margin-top:14px; flex-wrap:wrap;">
-          <span class="tag">Python</span><span class="tag">Jira</span><span class="tag">QA Automation</span>
-        </div>
-      </div>
-      <div class="timeline-item">
-        <div class="timeline-dot"></div>
-        <div class="timeline-period">Oct 2025 — Present · 8 mos · India</div>
-        <div class="timeline-role">Founder</div>
-        <div class="timeline-org">Karma Sarthi · Self-employed</div>
-        <p class="timeline-desc">Leading a purpose-driven initiative focused on guiding individuals toward meaningful career paths through strategic counseling, mentorship, and data-driven insights. Building a platform that connects students, freelancers, and professionals with the right opportunities based on their skills, aspirations, and life goals.</p>
-        <div style="display:flex; gap:8px; margin-top:14px; flex-wrap:wrap;">
-          <span class="tag">Leadership</span><span class="tag">Career Counseling</span><span class="tag">Mentorship</span>
-        </div>
-      </div>
-      <div class="timeline-item">
-        <div class="timeline-dot"></div>
-        <div class="timeline-period">Aug 2025 — Present · 10 mos · Delhi, Remote</div>
-        <div class="timeline-role">Freelance Research Contributor</div>
-        <div class="timeline-org">Kolabtree · Self-employed</div>
-        <p class="timeline-desc">Providing academic writing and research services on a freelance basis, contributing to scientific and technical projects across various domains through the Kolabtree platform.</p>
-        <div style="display:flex; gap:8px; margin-top:14px; flex-wrap:wrap;">
-          <span class="tag">Academic Writing</span><span class="tag">Research</span>
-        </div>
-      </div>
-      <div class="timeline-item">
-        <div class="timeline-dot"></div>
-        <div class="timeline-period">Aug 2023 — Nov 2023 · 4 mos · Delhi</div>
-        <div class="timeline-role">Computer Vision Research Engineer</div>
-        <div class="timeline-org">Enord Pvt. Ltd.</div>
-        <p class="timeline-desc">Led a team in developing and implementing a real-time drone automation project. Oversaw project execution, coordinated team efforts, and ensured successful integration of computer vision technologies for autonomous drone operations.</p>
-        <div style="display:flex; gap:8px; margin-top:14px; flex-wrap:wrap;">
-          <span class="tag">OpenCV</span><span class="tag">Drone Automation</span><span class="tag">Computer Vision</span><span class="tag">Team Lead</span>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
+<!-- 07 — EXPERIENCE -->
+<section id="experience"><div class="wrap">
+<div class="mono">07 — Experience</div><h2>Experience</h2>
+<div class="tl reveal">
+<div class="job"><span class="mono">Mar 2026 — Present · Bengaluru · Hybrid</span><h3>Test Engineer</h3><div class="co">Wipro · Full-time</div><p>Python-based automation and Jira-based project tracking in a hybrid engineering environment.</p></div>
+<div class="job"><span class="mono">Oct 2025 — Present · India</span><h3>Founder</h3><div class="co">Karma Sarthi · Self-employed</div><p>Building a career mentorship platform that guides students, freelancers and professionals toward meaningful paths through counseling, mentorship and data-driven insights.</p></div>
+<div class="job"><span class="mono">Aug 2025 — Present · Delhi · Remote</span><h3>Freelance Research Contributor</h3><div class="co">Kolabtree · Self-employed</div><p>Academic writing and research services contributing to scientific and technical projects.</p></div>
+<div class="job"><span class="mono">Aug 2023 — Nov 2023 · Delhi</span><h3>Computer Vision Research Engineer</h3><div class="co">Enord Pvt. Ltd.</div><p>Led a team building a real-time drone automation project, coordinating execution and integration of computer vision for autonomous drone operations.</p></div>
+</div></div></section>
 
-<!-- SKILLS -->
-<section>
-  <div class="section-inner">
-    <div class="section-header">
-      <span class="section-number">04</span>
-      <h2 class="section-title">Skills</h2>
-    </div>
-    <div class="skills-grid">
-      <div class="skill-group">
-        <div class="skill-group-title">AI & ML</div>
-        <div class="skill-list">
-          <div class="skill-item"><span class="skill-name">Computer Vision</span><div class="skill-bar"><div class="skill-fill" style="width:90%"></div></div></div>
-          <div class="skill-item"><span class="skill-name">Deep Learning</span><div class="skill-bar"><div class="skill-fill" style="width:85%"></div></div></div>
-          <div class="skill-item"><span class="skill-name">Reinforcement Learning</span><div class="skill-bar"><div class="skill-fill" style="width:80%"></div></div></div>
-          <div class="skill-item"><span class="skill-name">Genetic Algorithms</span><div class="skill-bar"><div class="skill-fill" style="width:78%"></div></div></div>
-          <div class="skill-item"><span class="skill-name">Scikit-Learn</span><div class="skill-bar"><div class="skill-fill" style="width:82%"></div></div></div>
-        </div>
-      </div>
-      <div class="skill-group">
-        <div class="skill-group-title">Languages</div>
-        <div class="skill-list">
-          <div class="skill-item"><span class="skill-name">Python</span><div class="skill-bar"><div class="skill-fill" style="width:92%"></div></div></div>
-          <div class="skill-item"><span class="skill-name">C++</span><div class="skill-bar"><div class="skill-fill" style="width:45%"></div></div></div>
-          <div class="skill-item"><span class="skill-name">HTML / CSS</span><div class="skill-bar"><div class="skill-fill" style="width:50%"></div></div></div>
-          <div class="skill-item"><span class="skill-name">SQL / MySQL</span><div class="skill-bar"><div class="skill-fill" style="width:55%"></div></div></div>
-        </div>
-      </div>
-      <div class="skill-group">
-        <div class="skill-group-title">Tools & Frameworks</div>
-        <div class="skill-list">
-          <div class="skill-item"><span class="skill-name">OpenCV</span><div class="skill-bar"><div class="skill-fill" style="width:88%"></div></div></div>
-          <div class="skill-item"><span class="skill-name">TensorFlow / Keras</span><div class="skill-bar"><div class="skill-fill" style="width:82%"></div></div></div>
-          <div class="skill-item"><span class="skill-name">PyTorch</span><div class="skill-bar"><div class="skill-fill" style="width:75%"></div></div></div>
-          <div class="skill-item"><span class="skill-name">NumPy / Pandas</span><div class="skill-bar"><div class="skill-fill" style="width:88%"></div></div></div>
-          <div class="skill-item"><span class="skill-name">Git / GitHub</span><div class="skill-bar"><div class="skill-fill" style="width:80%"></div></div></div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
+<!-- 08 — CONTACT -->
+<section id="contact"><div class="wrap">
+<div class="mono">08 — Contact</div><h2>Let's Build Something Intelligent.</h2>
+<p class="big reveal" style="max-width:640px">Interested in AI, research, intelligent systems, or building something ambitious? Let's connect.</p>
+<div class="btns reveal">
+<a class="btn p" href="mailto:sachinsonivbs@gmail.com">Email me <span>→</span></a>
+<a class="btn" href="https://www.linkedin.com/in/sachinsonii/" target="_blank" rel="noopener noreferrer">LinkedIn <span>↗</span></a>
+<a class="btn" href="https://github.com/sachinsonii" target="_blank" rel="noopener noreferrer">GitHub <span>↗</span></a>
+<a class="btn" href="https://scholar.google.com/citations?user=EtBnew4AAAAJ&amp;hl=en" target="_blank" rel="noopener noreferrer">Google Scholar <span>↗</span></a>
+</div></div></section>
+</main>
 
-<!-- CONTACT -->
-<section id="contact">
-  <div class="section-inner">
-    <div class="section-header">
-      <span class="section-number">05</span>
-      <h2 class="section-title">Contact</h2>
-    </div>
-    <div class="contact-grid">
-      <div>
-        <p class="contact-intro">"Let's build something intelligent together."</p>
-        <p class="contact-sub">
-          I'm open to research collaborations, internship opportunities, and interesting AI/ML projects.
-          Whether you're working on autonomous systems, computer vision, or ML applications — reach out.
-        </p>
-        <div style="margin-top: 40px;">
-          <div style="font-family: var(--mono); font-size: 10px; color: var(--text-dim); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 16px;">Based in</div>
-          <div style="font-size: 15px; color: var(--text-muted);">Bagalore, India · UTC +05:30</div>
-        </div>
-      </div>
-      <div class="contact-links">
-        <a href="mailto:sachinsonivbs@gmail.com" class="contact-link-item">
-          <div class="contact-link-label"><div>
-            <div class="contact-link-type">Email</div>
-            <div class="contact-link-value">sachinsonivbs@gmail.com</div>
-          </div></div>
-          <span class="contact-arrow">→</span>
-        </a>
-        <a href="https://linkedin.com/in/sachinsonii" target="_blank" class="contact-link-item">
-          <div class="contact-link-label"><div>
-            <div class="contact-link-type">LinkedIn</div>
-            <div class="contact-link-value">in/sachinsonii</div>
-          </div></div>
-          <span class="contact-arrow">→</span>
-        </a>
-        <a href="https://github.com/sachinsonii" target="_blank" class="contact-link-item">
-          <div class="contact-link-label"><div>
-            <div class="contact-link-type">GitHub</div>
-            <div class="contact-link-value">sachinsonii</div>
-          </div></div>
-          <span class="contact-arrow">→</span>
-        </a>
-        <a href="tel:+918377927727" class="contact-link-item">
-          <div class="contact-link-label"><div>
-            <div class="contact-link-type">Phone</div>
-            <div class="contact-link-value">+91 8377 927 727</div>
-          </div></div>
-          <span class="contact-arrow">→</span>
-        </a>
-      </div>
-    </div>
-  </div>
-</section>
+<footer><div class="wrap">
+<div><strong style="color:var(--fg)">SACHIN SONI</strong><br>Computer Science Researcher · AI/ML Developer<br>
+<a href="https://github.com/sachinsonii" target="_blank" rel="noopener noreferrer">GitHub</a> · <a href="https://www.linkedin.com/in/sachinsonii/" target="_blank" rel="noopener noreferrer">LinkedIn</a> · <a href="https://scholar.google.com/citations?user=EtBnew4AAAAJ&amp;hl=en" target="_blank" rel="noopener noreferrer">Google Scholar</a></div>
+<div class="mono" style="text-align:right">© 2026 Sachin Soni<br>Built with curiosity &amp; code.</div>
+</div></footer>
 
-<!-- FOOTER -->
-<footer>
-  <div class="footer-name">Sachin Soni</div>
-  <div class="footer-copy">© 2025 · AI/ML Researcher & Developer · Bangalore, India</div>
-</footer>
-
-<script src="script.js"></script>
-
+<script src="script.js" defer></script>
 </body>
 </html>
